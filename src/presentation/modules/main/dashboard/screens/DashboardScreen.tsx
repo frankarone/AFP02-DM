@@ -8,10 +8,7 @@ import { useAuthStore } from '../../../auth/store/authStore';
 type QuickCard = { label: string; icon: string; color: string };
 
 const CARDS: QuickCard[] = [
-  { label: 'Catálogo',  icon: '📦', color: '#E8F5E9' },
-  { label: 'Carrito',   icon: '🛒', color: '#E3F2FD' },
-  { label: 'Órdenes',   icon: '📋', color: '#FFF8E1' },
-  { label: 'Pagos',     icon: '💳', color: '#FCE4EC' },
+
 ];
 
 export function DashboardScreen() {
@@ -54,13 +51,7 @@ export function DashboardScreen() {
           ))}
         </View>
 
-        {/* Info de sesión */}
-        <View style={styles.sessionBox}>
-          <Text style={styles.sessionTitle}>Sesión activa</Text>
-          <Text style={styles.sessionEmail}>{user?.email ?? '—'}</Text>
-          <Text style={styles.sessionHint}>Token guardado en SecureStore</Text>
-        </View>
-
+    
       </ScrollView>
     </SafeAreaView>
   );
@@ -75,7 +66,7 @@ const styles = StyleSheet.create({
   logoutBtn: { backgroundColor: '#B22222', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 6 },
   logoutText: { color: '#fff', fontSize: 13, fontWeight: '600' },
 
-  greetingBox: { backgroundColor: '#2E7D32', borderRadius: 12, padding: 20, marginBottom: 28 },
+  greetingBox: { backgroundColor: '#2E7D32', borderRadius: 5, padding: 20, marginBottom: 28 },
   greeting: { color: '#A5D6A7', fontSize: 14 },
   userName: { color: '#fff', fontSize: 22, fontWeight: '700', marginTop: 2 },
   subGreeting: { color: '#C8E6C9', fontSize: 13, marginTop: 4 },
@@ -86,7 +77,7 @@ const styles = StyleSheet.create({
   cardIcon: { fontSize: 32, marginBottom: 8 },
   cardLabel: { fontSize: 14, fontWeight: '600', color: '#333' },
 
-  sessionBox: { backgroundColor: '#fff', borderRadius: 12, padding: 16, borderLeftWidth: 4, borderLeftColor: '#6B93B0' },
+  sessionBox: { backgroundColor: '#fff', borderRadius: 12, padding: 16},
   sessionTitle: { fontSize: 13, fontWeight: '700', color: '#6B93B0', marginBottom: 4 },
   sessionEmail: { fontSize: 14, color: '#333', fontWeight: '600' },
   sessionHint: { fontSize: 12, color: '#999', marginTop: 4 },

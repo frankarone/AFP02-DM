@@ -59,7 +59,7 @@ export function LoginScreen({ navigation }: Props) {
         {/* Campo usuario */}
         <View style={[styles.inputWrapper, !!errors.email && styles.inputWrapperError]}>
           <View style={styles.iconBox}>
-            <Text style={styles.icon}>👤</Text>
+            {/* <Text style={styles.icon}>👤</Text> */}
           </View>
           <Controller
             control={control}
@@ -84,7 +84,7 @@ export function LoginScreen({ navigation }: Props) {
         {/* Campo contraseña */}
         <View style={[styles.inputWrapper, !!errors.password && styles.inputWrapperError]}>
           <View style={styles.iconBox}>
-            <Text style={styles.icon}>🔒</Text>
+            {/* <Text style={styles.icon}>🔒</Text> */}
           </View>
           <Controller
             control={control}
