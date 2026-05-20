@@ -1,14 +1,13 @@
-// Replace with expo-secure-store once installed: npx expo install expo-secure-store
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ExpoSecureStore from 'expo-secure-store';
 
 export const SecureStorage = {
   async set(key: string, value: string): Promise<void> {
-    await AsyncStorage.setItem(key, value);
+    await ExpoSecureStore.setItemAsync(key, value);
   },
   async get(key: string): Promise<string | null> {
-    return AsyncStorage.getItem(key);
+    return ExpoSecureStore.getItemAsync(key);
   },
   async remove(key: string): Promise<void> {
-    await AsyncStorage.removeItem(key);
+    await ExpoSecureStore.deleteItemAsync(key);
   },
 };

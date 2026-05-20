@@ -43,4 +43,9 @@ export class AuthRepositoryImpl implements IAuthRepository {
     await this.local.saveTokens(tokens);
     return tokens;
   }
+
+  async hasActiveSession(): Promise<boolean> {
+    const tokens = await this.local.getTokens();
+    return tokens !== null;
+  }
 }

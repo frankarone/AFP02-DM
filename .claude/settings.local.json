@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(npx expo *)",
-      "Bash(npm install *)",
-      "PowerShell(cd \"C:\\\\Users\\\\Cristofer\\\\Desktop\\\\PROYECTO MOVILES\\\\AFP02-DM\"; New-Item -ItemType Directory -Path assets -Force; $files = @\\(\"android-icon-background.png\",\"android-icon-foreground.png\",\"android-icon-monochrome.png\",\"favicon.png\",\"icon.png\",\"splash-icon.png\"\\); foreach \\($f in $files\\) { git show \"4c7121c:assets/$f\" | Set-Content -Path \"assets\\\\$f\" -Encoding Byte }; Get-ChildItem assets/)"
-    ]
-  }
-}

@@ -1,19 +1,29 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-
-// TODO: install @react-navigation/native and @react-navigation/native-stack
-// npx expo install @react-navigation/native @react-navigation/native-stack react-native-screens react-native-safe-area-context
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AuthNavigator } from './AuthNavigator';
+import { MainNavigator } from './MainNavigator';
+import { useAuthStore } from '../modules/auth/store/authStore';
 
 export type RootStackParamList = {
   Auth: undefined;
   Main: undefined;
 };
 
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
 export function AppNavigator() {
-  // Replace with NavigationContainer + Stack when navigation is installed
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>AppNavigator — wire up once @react-navigation is installed</Text>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {isAuthenticated ? (
+          <Stack.Screen name="Main" component={MainNavigator} />
+        ) : (
+          <Stack.Screen name="Auth" component={AuthNavigator} />
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

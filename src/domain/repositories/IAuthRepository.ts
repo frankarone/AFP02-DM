@@ -24,4 +24,5 @@ export interface IAuthRepository {
   updatePassword(currentPassword: string, newPassword: string): Promise<void>;
   recoverPassword(email: string): Promise<void>;
   refreshToken(refreshToken: string): Promise<AuthTokens>;
+  hasActiveSession(): Promise<boolean>;
 }
