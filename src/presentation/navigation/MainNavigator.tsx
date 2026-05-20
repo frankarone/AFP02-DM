@@ -29,11 +29,11 @@ const Tab   = createBottomTabNavigator<MainTabParamList>();
 const Stack = createNativeStackNavigator<MainStackParamList>();
 
 const TAB_ICONS: Record<string, string> = {
-  Dashboard: '🏠',
-  Catalog:   '📦',
-  Cart:      '🛒',
-  Orders:    '📋',
-  Profile:   '👤',
+  Dashboard: '',
+  Catalog:   '',
+  Cart:      '',
+  Orders:    '',
+  Profile:   '',
 };
 
 function MainTabs() {
