@@ -1,41 +1,65 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-# dependencies
+# ─── Dependencies ───────────────────────────────────────────
 node_modules/
 
-# Expo
+# ─── Expo ───────────────────────────────────────────────────
 .expo/
 dist/
 web-build/
 expo-env.d.ts
 
-# Native
+# ─── Native generated folders ───────────────────────────────
+/android
+/ios
 .kotlin/
+
+# ─── Environment variables ──────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─── Credentials & certificates ─────────────────────────────
 *.orig.*
 *.jks
 *.p8
 *.p12
 *.key
 *.mobileprovision
+*.pem
+google-services.json
+GoogleService-Info.plist
 
-# Metro
-.metro-health-check*
+# ─── Build output ───────────────────────────────────────────
+build/
+*.apk
+*.aab
+*.ipa
 
-# debug
+# ─── Logs ───────────────────────────────────────────────────
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+*.log
+logs/
 
-# macOS
-.DS_Store
-*.pem
+# ─── Metro bundler ──────────────────────────────────────────
+.metro-health-check*
 
-# local env files
-.env*.local
-
-# typescript
+# ─── TypeScript ─────────────────────────────────────────────
 *.tsbuildinfo
 
-# generated native folders
-/ios
-/android
+# ─── OS files ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── IDE / Editor ───────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── Testing ────────────────────────────────────────────────
+coverage/
+
+# ─── Misc ───────────────────────────────────────────────────
+*.orig
