@@ -216,8 +216,8 @@ export function ProfileScreen() {
   return (
     <SafeAreaView className="flex-1 bg-light-surface">
       <ScrollView className="flex-1 px-md py-md" showsVerticalScrollIndicator={false}>
-        {/* ─────────────────────────────────────────────────────────────── */
-        {/* SECCIÓN 1: Encabezado con Avatar */
+        {/* ─────────────────────────────────────────────────────────────── */}
+        {/* SECCIÓN 1: Encabezado con Avatar */}
         {/* ─────────────────────────────────────────────────────────────── */}
         <ProfileHeader
           avatarUrl={profile.avatarUrl}
@@ -238,8 +238,8 @@ export function ProfileScreen() {
           />
         </View>
 
-        {/* ─────────────────────────────────────────────────────────────── */
-        {/* SECCIÓN 2: Información del Inspector */
+        {/* ─────────────────────────────────────────────────────────────── */}
+        {/* SECCIÓN 2: Información del Inspector */}
         {/* ─────────────────────────────────────────────────────────────── */}
         <View className="mb-lg">
           <Text className="text-lg font-bold text-text-primary mb-md">
@@ -283,8 +283,8 @@ export function ProfileScreen() {
           />
         </View>
 
-        {/* ─────────────────────────────────────────────────────────────── */
-        {/* SECCIÓN 3: Preferencias del Inspector */
+        {/* ─────────────────────────────────────────────────────────────── */}
+        {/* SECCIÓN 3: Preferencias del Inspector */}
         {/* ─────────────────────────────────────────────────────────────── */}
         <View className="mb-lg">
           <View className="flex-row items-center justify-between mb-md">
@@ -386,8 +386,8 @@ export function ProfileScreen() {
           </View>
         </View>
 
-        {/* ─────────────────────────────────────────────────────────────── */
-        {/* SECCIÓN 4: Información del Sistema */
+        {/* ─────────────────────────────────────────────────────────────── */}
+        {/* SECCIÓN 4: Información del Sistema */}
         {/* ─────────────────────────────────────────────────────────────── */}
         <View className="bg-white rounded-lg p-md mb-lg border border-gray-200">
           <Text className="text-sm text-text-secondary mb-md">
