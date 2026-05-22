@@ -16,7 +16,7 @@ import {
   SettingsToggle,
   SettingsSelect,
 } from '../components';
-import type { PlantType, FruitType } from '../../../domain/entities/InspectorProfile';
+import type { PlantType, FruitType, InspectorPreferences } from '../../../domain/entities/InspectorProfile';
 
 /**
  * Pantalla de Perfil del Inspector de Control de Calidad
@@ -32,7 +32,7 @@ import type { PlantType, FruitType } from '../../../domain/entities/InspectorPro
  * - useState: Gestiona estado local de edición
  * - useProfileStore: Estado global del perfil (Zustand)
  */
-export function ProfileScreen() {
+export default function ProfileScreen() {
   const {
     profile,
     isLoading,
@@ -46,8 +46,9 @@ export function ProfileScreen() {
   } = useProfileStore();
 
   // Estados locales para edición
+  // tempPreferences se inicializa como null para evitar undefined en primer render
   const [isEditing, setIsEditing] = useState(false);
-  const [tempPreferences, setTempPreferences] = useState(profile?.preferences);
+  const [tempPreferences, setTempPreferences] = useState<InspectorPreferences | null>(null);
 
   /**
    * Hook: Carga el perfil cuando se monta el componente
@@ -59,12 +60,13 @@ export function ProfileScreen() {
 
   /**
    * Sincroniza preferencias locales cuando el perfil cambia
+   * Se ejecuta solo si el perfil tiene preferencias validas
    */
   useEffect(() => {
     if (profile?.preferences) {
-      setTempPreferences(profile.preferences);
+      setTempPreferences({ ...profile.preferences });
     }
-  }, [profile]);
+  }, [profile?.preferences]);
 
   /**
    * Maneja la subida de avatar
@@ -91,50 +93,35 @@ export function ProfileScreen() {
    * Actualiza el estado local temporalmente
    */
   const handlePlantChange = (plant: PlantType) => {
-    if (tempPreferences) {
-      setTempPreferences({
-        ...tempPreferences,
-        defaultPlant: plant,
-      });
-    }
+    setTempPreferences(prev => prev ? { ...prev, defaultPlant: plant } : null);
   };
 
   const handleFruitChange = (fruit: FruitType) => {
-    if (tempPreferences) {
-      setTempPreferences({
-        ...tempPreferences,
-        defaultFruit: fruit,
-      });
-    }
+    setTempPreferences(prev => prev ? { ...prev, defaultFruit: fruit } : null);
   };
 
   const handleOfflineModeToggle = (value: boolean) => {
-    if (tempPreferences) {
-      setTempPreferences({
-        ...tempPreferences,
-        offlineModeEnabled: value,
-      });
-    }
+    setTempPreferences(prev => prev ? { ...prev, offlineModeEnabled: value } : null);
   };
 
   const handleLowDataModeToggle = (value: boolean) => {
-    if (tempPreferences) {
-      setTempPreferences({
-        ...tempPreferences,
-        lowDataModeEnabled: value,
-      });
-    }
+    setTempPreferences(prev => prev ? { ...prev, lowDataModeEnabled: value } : null);
   };
 
   /**
    * Guarda los cambios de preferencias
-   * 1. Valida que haya cambios
-   * 2. Envía al servidor
-   * 3. Muestra confirmación o error
+   * 1. Valida que haya cambios reales
+   * 2. Envia al servidor mediante updatePreferences
+   * 3. Muestra confirmacion o error con Alert
    */
   const handleSavePreferences = async () => {
-    if (!tempPreferences || !profile?.preferences) return;
+    // Validar que tempPreferences y profile existan
+    if (!tempPreferences || !profile?.preferences) {
+      Alert.alert('Validacion', 'Las preferencias no estan disponibles');
+      return;
+    }
 
+    // Detectar cambios comparando JSON
     const hasChanges =
       JSON.stringify(tempPreferences) !== JSON.stringify(profile.preferences);
 
@@ -145,12 +132,13 @@ export function ProfileScreen() {
 
     try {
       await updatePreferences(tempPreferences);
-      Alert.alert('Éxito', 'Preferencias actualizadas correctamente');
+      Alert.alert('Exito', 'Preferencias actualizadas correctamente');
       setIsEditing(false);
     } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Error desconocido';
       Alert.alert(
         'Error',
-        'No se pudieron guardar las preferencias. Por favor intenta de nuevo.',
+        'No se pudieron guardar las preferencias. Por favor intenta de nuevo.\n\n' + errorMsg,
       );
     }
   };

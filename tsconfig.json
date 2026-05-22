@@ -1,4 +1,47 @@
 {
-  "compilerOptions": {},
-  "extends": "expo/tsconfig.base"
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    // ─── Opciones Generales ───────────────────────────────────
+    "lib": ["es2020", "dom", "dom.iterable"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    
+    // ─── Rutas y Módulos ───────────────────────────────────────
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/presentation/modules/*/components/*"],
+      "@screens/*": ["src/presentation/modules/*/screens/*"],
+      "@hooks/*": ["src/core/hooks/*"],
+      "@utils/*": ["src/core/utils/*"],
+      "@types/*": ["src/core/types/*"],
+    },
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    
+    // ─── Tipado Estricto ──────────────────────────────────────
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    
+    // ─── Características Modernas ──────────────────────────────
+    "target": "ES2020",
+    "module": "ES2020",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    
+    // ─── Compatibilidad ───────────────────────────────────────
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
