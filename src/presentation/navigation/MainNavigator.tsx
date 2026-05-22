@@ -29,10 +29,10 @@ const Tab   = createBottomTabNavigator<MainTabParamList>();
 const Stack = createNativeStackNavigator<MainStackParamList>();
 
 const TAB_ICONS: Record<string, string> = {
-  Dashboard: '',
-  Catalog:   '',
+  Dashboard: '🏠',
+  Catalog:   '📸',
   Cart:      '',
-  Orders:    '',
+  Orders:    '📄',
   Profile:   '',
 };
 
@@ -48,9 +48,9 @@ function MainTabs() {
       })}
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ title: 'Inicio' }} />
-      <Tab.Screen name="Catalog"   component={CatalogScreen}   options={{ title: 'Catálogo' }} />
+      <Tab.Screen name="Catalog"   component={CatalogScreen}   options={{ title: 'Inspección' }} />
       <Tab.Screen name="Cart"      component={CartScreen}      options={{ title: 'Carrito' }} />
-      <Tab.Screen name="Orders"    component={OrdersScreen}    options={{ title: 'Órdenes' }} />
+      <Tab.Screen name="Orders"    component={OrdersScreen}    options={{ title: 'Reporte' }} />
       <Tab.Screen name="Profile"   component={ProfileScreen}   options={{ title: 'Perfil' }} />
     </Tab.Navigator>
   );
