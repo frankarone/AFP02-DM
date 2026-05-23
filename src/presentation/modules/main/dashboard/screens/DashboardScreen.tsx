@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,9 +9,11 @@ import {
   SafeAreaView,
 } from "react-native";
 import { useAuthStore } from "../../../auth/store/authStore";
+import * as Progress from "react-native-progress";
 
 export function DashboardScreen() {
   const { user, logout } = useAuthStore();
+  const [value, setValue] = useState(0);
 
   const greeting = () => {
     const h = new Date().getHours();
@@ -20,80 +22,129 @@ export function DashboardScreen() {
     return "Buenas noches";
   };
 
+  //ANIMACION DE PROGRESO
+  useEffect(() => {
+    let progress = 0;
+
+    const interval = setInterval(() => {
+      progress += 0.05;
+      if (progress >= 1) {
+        progress = 1;
+        clearInterval(interval);
+      }
+      setValue(progress);
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.scroll}>
-        {/* Header */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scroll}
+      >
+        {/* HEADER */}
         <View style={styles.header}>
           <Image
             source={require("../../../../../../assets/Logo.png")}
             style={styles.logo}
             resizeMode="contain"
           />
+
           <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
-            <Text style={styles.logoutText}>Cerrar sesión</Text>
+            <Text style={styles.logoutText}>Salir</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Saludo */}
+        {/* BIENVENIDA */}
         <View style={styles.greetingBox}>
           <Text style={styles.greeting}>{greeting()},</Text>
           <Text style={styles.userName}>{user?.name ?? "Usuario"}</Text>
-          <Text style={styles.subGreeting}>
-            Bienvenido al sistema AGRIHUSAC
-          </Text>
+
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>Sistema AGRIHUSAC 🌱</Text>
+          </View>
         </View>
 
-        {/* Módulos rápidos */}
-        {/* <Text style={styles.sectionTitle}>Módulos</Text> */}
+        {/* DASHBOARD */}
         <View style={styles.modulesContainer}>
-          {/* 🔴 REGISTROS DE DAÑOS */}
-          <View style={[styles.moduleCard, { backgroundColor: "#E3F2FD" }]}>
+          {/* REGISTROS */}
+          <TouchableOpacity activeOpacity={0.9} style={styles.moduleCard}>
             <Text style={styles.cardTitle}>Registros de Daños</Text>
 
             <View style={styles.previewGrid}>
               {[1, 2, 3, 4].map((i) => (
                 <Image
                   key={i}
-                  source={{
-                    uri: `https://via.placeholder.com/100x80.png?text=Daño+${i}`,
-                  }}
+                  source={{ uri: `https://picsum.photos/200/200?random=${i}` }}
                   style={styles.smallImage}
                 />
               ))}
             </View>
-          </View>
+          </TouchableOpacity>
 
-          {/* 🟠 GRÁFICOS */}
-          <View style={[styles.moduleCard, { backgroundColor: "#FFF3E0" }]}>
-            <Text style={styles.cardTitle}>Gráficos</Text>
+          {/* PROGRESO */}
+          <TouchableOpacity activeOpacity={0.9} style={styles.moduleCard}>
+            <Text style={styles.cardTitle}>Estado del Sistema</Text>
 
             <View style={styles.previewGrid}>
-              {[1, 2].map((i) => (
-                <Image
-                  key={i}
-                  source={{
-                    uri: `https://via.placeholder.com/150x100.png?text=Grafico+${i}`,
-                  }}
-                  style={styles.chartImage}
+              <View style={styles.chartBox}>
+                <Progress.Circle
+                  size={85}
+                  progress={value}
+                  thickness={8}
+                  color="#2E7D32"
+                  unfilledColor="#E8F5E9"
+                  borderWidth={0}
+                  showsText={true}
+                  formatText={() => `${Math.round(value * 100)}%`}
                 />
-              ))}
+                <Text style={styles.chartText}>Progreso</Text>
+              </View>
+
+              <View style={styles.chartBox}>
+                <Progress.Circle
+                  size={85}
+                  progress={0.3}
+                  thickness={8}
+                  color="#8D6E63"
+                  unfilledColor="#EFEBE9"
+                  borderWidth={0}
+                  showsText={true}
+                  formatText={() => `30%`}
+                />
+                <Text style={styles.chartText}>Daños</Text>
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
+/* PALETA AGRIHUSAC */
+const COLORS = {
+  primary: "#2E7D32",
+  secondary: "#66BB6A",
+  accent: "#A5D6A7",
+  earth: "#8D6E63",
+  background: "#F4F8F5",
+  white: "#FFFFFF",
+  text: "#263238",
+};
+
+/* ESTILOS */
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#F5F7FA",
+    backgroundColor: COLORS.background,
   },
 
   scroll: {
     padding: 20,
+    paddingBottom: 50,
   },
 
   header: {
@@ -109,70 +160,73 @@ const styles = StyleSheet.create({
   },
 
   logoutBtn: {
-    backgroundColor: "#B22222",
-    paddingHorizontal: 14,
+    backgroundColor: "#D32F2F",
+    paddingHorizontal: 18,
     paddingVertical: 8,
-    borderRadius: 6,
+    borderRadius: 25,
   },
 
   logoutText: {
     color: "#fff",
-    fontSize: 13,
-    fontWeight: "600",
+    fontSize: 12,
+    fontWeight: "700",
   },
 
   greetingBox: {
-    backgroundColor: "#2E7D32",
-    borderRadius: 8,
+    backgroundColor: COLORS.primary,
+    borderRadius: 18,
     padding: 20,
     marginBottom: 28,
   },
 
   greeting: {
-    color: "#A5D6A7",
+    color: COLORS.accent,
     fontSize: 14,
   },
 
   userName: {
     color: "#fff",
-    fontSize: 22,
-    fontWeight: "700",
-    marginTop: 2,
-  },
-
-  subGreeting: {
-    color: "#C8E6C9",
-    fontSize: 13,
+    fontSize: 26,
+    fontWeight: "800",
     marginTop: 4,
   },
 
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#333",
-    marginBottom: 14,
+  badge: {
+    marginTop: 10,
+    backgroundColor: "#1B5E20",
+    alignSelf: "flex-start",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+
+  badgeText: {
+    color: "#C8E6C9",
+    fontSize: 11,
+    fontWeight: "600",
   },
 
   modulesContainer: {
-    gap: 16,
+    gap: 20,
   },
 
   moduleCard: {
-    borderRadius: 16,
+    backgroundColor: COLORS.white,
+    borderRadius: 20,
     padding: 16,
 
-    // sombra (mejora visual)
-    elevation: 3,
+    elevation: 5,
     shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
   },
 
   cardTitle: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "700",
-    marginBottom: 12,
-    color: "#333",
+    marginBottom: 14,
+    color: COLORS.text,
   },
 
   previewGrid: {
@@ -183,14 +237,23 @@ const styles = StyleSheet.create({
 
   smallImage: {
     width: "48%",
-    height: 80,
-    borderRadius: 10,
+    height: 90,
+    borderRadius: 14,
     marginBottom: 10,
   },
 
-  chartImage: {
+  chartBox: {
     width: "48%",
-    height: 100,
-    borderRadius: 10,
+    alignItems: "center",
+    backgroundColor: "#F1F8E9",
+    padding: 14,
+    borderRadius: 14,
+  },
+
+  chartText: {
+    marginTop: 8,
+    fontSize: 12,
+    fontWeight: "600",
+    color: COLORS.text,
   },
 });
