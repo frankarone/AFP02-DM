@@ -1,84 +1,146 @@
 import React from 'react';
-import {
-  View, Text, Image, TouchableOpacity,
-  StyleSheet, ScrollView, SafeAreaView,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../../auth/store/authStore';
 
-type QuickCard = { label: string; icon: string; color: string };
 
-const CARDS: QuickCard[] = [
+export default function DashboardScreen() {
 
-];
-
-export function DashboardScreen() {
-  const { user, logout } = useAuthStore();
-
-  const greeting = () => {
-    const h = new Date().getHours();
-    if (h < 12) return 'Buenos días';
-    if (h < 18) return 'Buenas tardes';
-    return 'Buenas noches';
+  // funciones
+  const registrarDano = () => {
+    Alert.alert('Registrar daño', 'Aquí irá la pantalla para registrar daños de fruta');
   };
 
+  const verRegistros = () => {
+    Alert.alert('Ver registros', 'Aquí se mostrarán los registros guardados');
+  };
+
+  const generarReportes = () => {
+    Alert.alert('Generar reportes', 'Aquí se generará el reporte para el cliente');
+  };
+
+  const { logout } = useAuthStore();
+  const cerrarSesion = () => {
+    logout();
+  };
+
+  //frontend del dashboard
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.scroll}>
+    <View style={styles.container}>      
+      <Text style={styles.titulo}>OPERACIONES</Text>  
+      <Text style={styles.subtitulo}>Control de daños de frutas</Text>
 
-        {/* Header */}
-        <View style={styles.header}>
-          <Image source={require('../../../../../../assets/Logo.png')} style={styles.logo} resizeMode="contain" />
-          <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
-            <Text style={styles.logoutText}>Cerrar sesión</Text>
-          </TouchableOpacity>
-        </View>
+      {/* contenedor de opciones */}
+      <View style={styles.grid}>
 
-        {/* Saludo */}
-        <View style={styles.greetingBox}>
-          <Text style={styles.greeting}>{greeting()},</Text>
-          <Text style={styles.userName}>{user?.name ?? 'Usuario'}</Text>
-          <Text style={styles.subGreeting}>Bienvenido al sistema AGRIHUSAC</Text>
-        </View>
+        <TouchableOpacity style={styles.card} onPress={registrarDano}>
+          <Ionicons name="create-outline" size={35} color="#2e86de" />
+          <Text style={styles.textoCard}>Registrar daño</Text>
+        </TouchableOpacity>
+      
+        <TouchableOpacity style={styles.card} onPress={verRegistros}>
+          <Ionicons name="list-outline" size={35} color="#27ae60" />
+          <Text style={styles.textoCard}>Ver registros</Text>
+        </TouchableOpacity>
 
-        {/* Módulos rápidos */}
-        <Text style={styles.sectionTitle}>Módulos</Text>
-        <View style={styles.grid}>
-          {CARDS.map(card => (
-            <TouchableOpacity key={card.label} style={[styles.card, { backgroundColor: card.color }]} activeOpacity={0.75}>
-              <Text style={styles.cardIcon}>{card.icon}</Text>
-              <Text style={styles.cardLabel}>{card.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+  
+        <TouchableOpacity style={styles.card} onPress={generarReportes}>
+          <Ionicons name="document-text-outline" size={35} color="#f39c12" />
+          <Text style={styles.textoCard}>Generar reportes</Text>
+        </TouchableOpacity>
 
-    
-      </ScrollView>
-    </SafeAreaView>
+        
+        <TouchableOpacity style={styles.card} onPress={cerrarSesion}>
+          <Ionicons name="log-out-outline" size={35} color="#e74c3c" />
+          <Text style={styles.textoCard}>Cerrar sesión</Text>
+        </TouchableOpacity>
+
+      </View>
+
+      {/*puntos*/}
+      <View style={styles.puntos}>
+        <View style={styles.puntoVacio} />
+        <View style={styles.puntoActivo} />
+        <View style={styles.puntoVacio} />
+        <View style={styles.puntoVacio} />
+        <View style={styles.puntoVacio} />
+      </View>
+
+    </View>
   );
 }
 
+//estilos
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#F5F7FA' },
-  scroll: { padding: 20 },
+  
+  container: {
+    flex: 1,
+    backgroundColor: '#e4dede',
+    padding: 20,
+    justifyContent: 'center',
+  },
 
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
-  logo: { width: 140, height: 60 },
-  logoutBtn: { backgroundColor: '#B22222', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 6 },
-  logoutText: { color: '#fff', fontSize: 13, fontWeight: '600' },
+  titulo: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#222',
+    marginBottom: 5,
+  },
 
-  greetingBox: { backgroundColor: '#2E7D32', borderRadius: 5, padding: 20, marginBottom: 28 },
-  greeting: { color: '#A5D6A7', fontSize: 14 },
-  userName: { color: '#fff', fontSize: 22, fontWeight: '700', marginTop: 2 },
-  subGreeting: { color: '#C8E6C9', fontSize: 13, marginTop: 4 },
+  subtitulo: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: '#555',
+    marginBottom: 30,
+  },
 
-  sectionTitle: { fontSize: 16, fontWeight: '700', color: '#333', marginBottom: 14 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 28 },
-  card: { width: '47%', borderRadius: 12, padding: 20, alignItems: 'center', justifyContent: 'center' },
-  cardIcon: { fontSize: 32, marginBottom: 8 },
-  cardLabel: { fontSize: 14, fontWeight: '600', color: '#333' },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
 
-  sessionBox: { backgroundColor: '#fff', borderRadius: 12, padding: 16},
-  sessionTitle: { fontSize: 13, fontWeight: '700', color: '#6B93B0', marginBottom: 4 },
-  sessionEmail: { fontSize: 14, color: '#333', fontWeight: '600' },
-  sessionHint: { fontSize: 12, color: '#999', marginTop: 4 },
+  card: {
+    width: '47%',
+    height: 130,
+    backgroundColor: '#c0fa8a',
+    borderRadius: 10,
+    marginBottom: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#160303',
+  },
+
+  textoCard: {
+    marginTop: 10,
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#333',
+  },
+
+  puntos: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 25,
+  },
+
+  puntoActivo: {
+    width: 12,
+    height: 12,
+    backgroundColor: '#000',
+    borderRadius: 6,
+    marginHorizontal: 6,
+  },
+
+  puntoVacio: {
+    width: 12,
+    height: 12,
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 6,
+    marginHorizontal: 6,
+  },
 });
