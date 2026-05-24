@@ -9,61 +9,73 @@ import {
   SafeAreaView,
 } from "react-native";
 
-//DATOS TEMPORALES: Luego estos datos vendrán en la BD
+// DATOS TEMPORALES: Luego estos datos se veran desde la BD
 
 const PRODUCTS = [
   {
     id: "1",
-    name: "Palta Hass",
-    lote: "PAL-001",
-    stock: 120,
-    image:
+    name: "Palta Hass Peruana",
+    description: "Palta de exportación seleccionada.",
+    price: 12.5,
+    imageUrl:
       "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?q=80&w=1200&auto=format&fit=crop",
+    stock: 120,
+    categoryId: "CAT-001",
   },
 
   {
     id: "2",
     name: "Mandarina Satsuma",
-    lote: "MAN-002",
-    stock: 80,
-    image:
+    description: "Mandarina fresca producida en Huaral.",
+    price: 8.9,
+    imageUrl:
       "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?q=80&w=1200&auto=format&fit=crop",
+    stock: 80,
+    categoryId: "CAT-002",
   },
 
   {
     id: "3",
     name: "Naranja Valencia",
-    lote: "NAR-003",
-    stock: 150,
-    image:
+    description: "Naranja dulce para exportación.",
+    price: 9.5,
+    imageUrl:
       "https://images.unsplash.com/photo-1547514701-42782101795e?q=80&w=1200&auto=format&fit=crop",
+    stock: 150,
+    categoryId: "CAT-003",
   },
 
   {
     id: "4",
     name: "Limón Sutil",
-    lote: "LIM-004",
-    stock: 65,
-    image:
+    description: "Limón fresco de alta calidad.",
+    price: 6.5,
+    imageUrl:
       "https://images.unsplash.com/photo-1590502593747-42a996133562?q=80&w=1200&auto=format&fit=crop",
+    stock: 65,
+    categoryId: "CAT-004",
   },
 
   {
     id: "5",
     name: "Uva Red Globe",
-    lote: "UVA-005",
-    stock: 200,
-    image:
+    description: "Uva peruana para agroexportación.",
+    price: 14.0,
+    imageUrl:
       "https://images.unsplash.com/photo-1537640538966-79f369143f8f?q=80&w=1200&auto=format&fit=crop",
+    stock: 200,
+    categoryId: "CAT-005",
   },
 
   {
     id: "6",
     name: "Mango Kent",
-    lote: "MAN-006",
-    stock: 95,
-    image:
+    description: "Mango fresco de producción nacional.",
+    price: 11.5,
+    imageUrl:
       "https://images.unsplash.com/photo-1553279768-865429fa0078?q=80&w=1200&auto=format&fit=crop",
+    stock: 95,
+    categoryId: "CAT-006",
   },
 ];
 
@@ -91,7 +103,7 @@ export function CatalogScreen() {
             style={styles.card}
           >
             <Image
-              source={{ uri: item.image }}
+              source={{ uri: item.imageUrl }}
               style={styles.image}
             />
 
@@ -100,8 +112,12 @@ export function CatalogScreen() {
                 {item.name}
               </Text>
 
+              <Text style={styles.description}>
+                {item.description}
+              </Text>
+
               <Text style={styles.info}>
-                Lote: {item.lote}
+                Precio: S/. {item.price}
               </Text>
 
               <Text style={styles.info}>
@@ -121,7 +137,7 @@ export function CatalogScreen() {
   );
 }
 
-//PALETA DE COLORES
+// PALETA DE COLORES
 
 const COLORS = {
   primary: "#2E7D32",
@@ -189,6 +205,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "700",
     color: COLORS.text,
+    marginBottom: 8,
+  },
+
+  description: {
+    fontSize: 14,
+    color: "#607D8B",
     marginBottom: 10,
   },
 
