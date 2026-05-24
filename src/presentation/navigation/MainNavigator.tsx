@@ -8,6 +8,7 @@ import { CartScreen } from '../modules/main/cart/screens/CartScreen';
 import { OrdersScreen } from '../modules/main/orders/screens/OrdersScreen';
 import { PaymentsScreen } from '../modules/main/payments/screens/PaymentsScreen';
 import { ProfileScreen } from '../modules/profile/screens/ProfileScreen';
+import { RegistroDañoScreen } from '../modules/main/registrodaño/screens/RegistroDañoScreen';
 
 export type MainTabParamList = {
   Dashboard: undefined;
@@ -49,7 +50,7 @@ function MainTabs() {
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ title: 'Inicio' }} />
       <Tab.Screen name="Catalog"   component={CatalogScreen}   options={{ title: 'Catálogo' }} />
-      <Tab.Screen name="Cart"      component={CartScreen}      options={{ title: 'Carrito' }} />
+      <Tab.Screen name="Cart"      component={RegistroDañoScreen}      options={{ title: 'Registrar Daño' }} />
       <Tab.Screen name="Orders"    component={OrdersScreen}    options={{ title: 'Órdenes' }} />
       <Tab.Screen name="Profile"   component={ProfileScreen}   options={{ title: 'Perfil' }} />
     </Tab.Navigator>
