@@ -26,13 +26,7 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-secure-store",
-      [
-        "nativewind/expo",
-        {
-          "input": "./global.css"
-        }
-      ]
+      "expo-secure-store"
     ]
   }
 }
