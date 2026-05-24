@@ -1,88 +1,66 @@
 import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View , Text , Image , StyleSheet } from 'react-native';
-import DashboardScreen from '../modules/main/dashboard/screens/DashboardScreen';
-import { Ionicons } from '@expo/vector-icons';
-import { useAuthStore } from '../modules/auth/store/authStore';
+import { Text } from 'react-native';
+import { DashboardScreen } from '../modules/main/dashboard/screens/DashboardScreen';
+import { CatalogScreen } from '../modules/main/catalog/screens/CatalogScreen';
+import { CartScreen } from '../modules/main/cart/screens/CartScreen';
+import { OrdersScreen } from '../modules/main/orders/screens/OrdersScreen';
+import { PaymentsScreen } from '../modules/main/payments/screens/PaymentsScreen';
+import { ProfileScreen } from '../modules/profile/screens/ProfileScreen';
 
-export type MainStackParamList = {
+export type MainTabParamList = {
   Dashboard: undefined;
+  Catalog:   undefined;
+  Cart:      undefined;
+  Orders:    undefined;
+  Profile:   undefined;
 };
 
+export type MainStackParamList = {
+  Tabs:          undefined;
+  ProductDetail: { productId: string };
+  OrderDetail:   { orderId: string };
+  Payments:      { orderId: string };
+  UpdatePassword: undefined;
+};
 
+const Tab   = createBottomTabNavigator<MainTabParamList>();
+const Stack = createNativeStackNavigator<MainStackParamList>();
 
-export function MainNavigator() {
+const TAB_ICONS: Record<string, string> = {
+  Dashboard: '',
+  Catalog:   '',
+  Cart:      '',
+  Orders:    '',
+  Profile:   '',
+};
 
-  //funciones
-  const Stack = createNativeStackNavigator<MainStackParamList>();
-  const user = useAuthStore((s) => s.user);
-
-  //froentend del navigator
+function MainTabs() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: true,
-
-        headerStyle: {
-          backgroundColor: '#f1eca2',
-        },
-        
-        headerShadowVisible: true,
-
-        headerTitle: () => (
-          <View style={styles.headerTitulo}>
-            <Image
-              source={require('../../../assets/Logo.png')}
-              style={styles.logo}
-            />
-            <Text style={styles.nombreSistema}>FPPMS</Text>
-          </View>
-
-        ),
-
-      headerRight: () => (
-        <View style={styles.usuarioCaja}>
-          <Ionicons name="person" size={24} color="#f7bfbf" />
-          <Text style={styles.usuarioTexto}>{user?.name}</Text>
-          </View>
-        ),
-      }}
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: () => <Text style={{ fontSize: 20 }}>{TAB_ICONS[route.name]}</Text>,
+        tabBarActiveTintColor: '#2E7D32',
+        tabBarInactiveTintColor: '#999',
+        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
+      })}
     >
-
-      <Stack.Screen name="Dashboard" component={DashboardScreen}/>
-    </Stack.Navigator>
+      <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ title: 'Inicio' }} />
+      <Tab.Screen name="Catalog"   component={CatalogScreen}   options={{ title: 'Catálogo' }} />
+      <Tab.Screen name="Cart"      component={CartScreen}      options={{ title: 'Carrito' }} />
+      <Tab.Screen name="Orders"    component={OrdersScreen}    options={{ title: 'Órdenes' }} />
+      <Tab.Screen name="Profile"   component={ProfileScreen}   options={{ title: 'Perfil' }} />
+    </Tab.Navigator>
   );
 }
 
-//estilos
-const styles = StyleSheet.create({
-  headerTitulo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  logo: {
-    width: 85,
-    height: 35,
-    resizeMode: 'contain',
-    marginRight: 10,
-  },
-
-  nombreSistema: {
-    fontSize: 17,
-    color: '#777',
-  },
-
-  usuarioCaja: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#3da87c',
-    paddingHorizontal: 8,
-    paddingVertical: 5,
-    borderRadius: 3,
-  },
-
-  usuarioTexto: {
-    marginLeft: 4,
-    fontSize: 13,
-    color: '#555',
-  },
-});
+export function MainNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Tabs"     component={MainTabs} />
+      <Stack.Screen name="Payments" component={PaymentsScreen} />
+    </Stack.Navigator>
+  );
+}
