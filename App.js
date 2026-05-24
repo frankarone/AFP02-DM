@@ -5,12 +5,13 @@ import { MainNavigator } from './src/presentation/navigation/MainNavigator';
 import { AuthNavigator } from './src/presentation/navigation/AuthNavigator';
 import { useAuthStore } from './src/presentation/modules/auth/store/authStore';
 //Modulo Main
-import { CartScreen } from './src/presentation/modules/main/cart/screens/CartScreen'; //Pantalla del Carrito de compras
-import { CatalogScreen } from './src/presentation/modules/main/catalog/screens/CatalogScreen'; //Pantalla del catalogo de productos
+import { CartScreen } from './src/presentation/modules/main/cart/screens/CartScreen';
+import { CatalogScreen } from './src/presentation/modules/main/catalog/screens/CatalogScreen'; 
 import { DashboardScreen } from './src/presentation/modules/main/dashboard/screens/DashboardScreen'; //Pantalla del tablero principal
-import { OrdersScreen } from './src/presentation/modules/main/orders/screens/OrdersScreen'; //Pantalla de pedidos
-import { PaymentsScreen } from './src/presentation/modules/main/payments/screens/PaymentsScreen'; //Pantalla de pagos
+import { OrdersScreen } from './src/presentation/modules/main/orders/screens/OrdersScreen'; 
+import { PaymentsScreen } from './src/presentation/modules/main/payments/screens/PaymentsScreen';  
 import { ProfileScreen } from './src/presentation/modules/profile/screens/ProfileScreen'; //Pantalla del perfil
+import { DamageListScreen } from './src/presentation/modules/main/catalog/screens/DamageListScreen'; //Pantalla del lista de registros
 //Modulo Auth
 import { ForgotPasswordScreen } from './src/presentation/modules/auth/screens/ForgotPasswordScreen'; //Recuperacion de contraseña
 import { LoginScreen } from './src/presentation/modules/auth/screens/LoginScreen'; //Inicio de sesion
@@ -26,7 +27,7 @@ export default function App() {
 
   return (
     <>
-      < CatalogScreen />
+      < DamageListScreen />
       <StatusBar style="auto" />
     </>
   );
