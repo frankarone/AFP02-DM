@@ -26,7 +26,7 @@ export default function App() {
 
   return (
     <>
-      < AppNavigator />
+      < CatalogScreen />
       <StatusBar style="auto" />
     </>
   );

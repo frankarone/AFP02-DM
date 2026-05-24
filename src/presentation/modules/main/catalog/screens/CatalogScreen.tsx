@@ -1,14 +1,214 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
+
+//DATOS TEMPORALES: Luego estos datos vendrán en la BD
+
+const PRODUCTS = [
+  {
+    id: "1",
+    name: "Palta Hass",
+    lote: "PAL-001",
+    stock: 120,
+    image:
+      "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?q=80&w=1200&auto=format&fit=crop",
+  },
+
+  {
+    id: "2",
+    name: "Mandarina Satsuma",
+    lote: "MAN-002",
+    stock: 80,
+    image:
+      "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?q=80&w=1200&auto=format&fit=crop",
+  },
+
+  {
+    id: "3",
+    name: "Naranja Valencia",
+    lote: "NAR-003",
+    stock: 150,
+    image:
+      "https://images.unsplash.com/photo-1547514701-42782101795e?q=80&w=1200&auto=format&fit=crop",
+  },
+
+  {
+    id: "4",
+    name: "Limón Sutil",
+    lote: "LIM-004",
+    stock: 65,
+    image:
+      "https://images.unsplash.com/photo-1590502593747-42a996133562?q=80&w=1200&auto=format&fit=crop",
+  },
+
+  {
+    id: "5",
+    name: "Uva Red Globe",
+    lote: "UVA-005",
+    stock: 200,
+    image:
+      "https://images.unsplash.com/photo-1537640538966-79f369143f8f?q=80&w=1200&auto=format&fit=crop",
+  },
+
+  {
+    id: "6",
+    name: "Mango Kent",
+    lote: "MAN-006",
+    stock: 95,
+    image:
+      "https://images.unsplash.com/photo-1553279768-865429fa0078?q=80&w=1200&auto=format&fit=crop",
+  },
+];
 
 export function CatalogScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Catalog Screen</Text>
-    </View>
+    <SafeAreaView style={styles.safe}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scroll}
+      >
+        {/* TITULO */}
+        <View style={styles.header}>
+          <Text style={styles.title}>Catálogo de Productos</Text>
+
+          <Text style={styles.subtitle}>
+            Productos agroindustriales registrados
+          </Text>
+        </View>
+
+        {/* PRODUCTOS */}
+        {PRODUCTS.map((item) => (
+          <TouchableOpacity
+            key={item.id}
+            activeOpacity={0.9}
+            style={styles.card}
+          >
+            <Image
+              source={{ uri: item.image }}
+              style={styles.image}
+            />
+
+            <View style={styles.content}>
+              <Text style={styles.productName}>
+                {item.name}
+              </Text>
+
+              <Text style={styles.info}>
+                Lote: {item.lote}
+              </Text>
+
+              <Text style={styles.info}>
+                Stock: {item.stock}
+              </Text>
+
+              <TouchableOpacity style={styles.button}>
+                <Text style={styles.buttonText}>
+                  Ver Detalles
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
+//PALETA DE COLORES
+
+const COLORS = {
+  primary: "#2E7D32",
+  secondary: "#66BB6A",
+  accent: "#A5D6A7",
+  earth: "#8D6E63",
+  background: "#F4F8F5",
+  white: "#FFFFFF",
+  text: "#263238",
+};
+
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  safe: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
+
+  scroll: {
+    padding: 20,
+    paddingBottom: 40,
+  },
+
+  header: {
+    marginBottom: 24,
+  },
+
+  title: {
+    fontSize: 28,
+    fontWeight: "800",
+    color: COLORS.primary,
+  },
+
+  subtitle: {
+    marginTop: 4,
+    fontSize: 14,
+    color: "#607D8B",
+  },
+
+  card: {
+    backgroundColor: COLORS.white,
+    borderRadius: 20,
+    marginBottom: 20,
+    overflow: "hidden",
+
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+  },
+
+  image: {
+    width: "100%",
+    height: 180,
+  },
+
+  content: {
+    padding: 16,
+  },
+
+  productName: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: COLORS.text,
+    marginBottom: 10,
+  },
+
+  info: {
+    fontSize: 14,
+    color: "#546E7A",
+    marginBottom: 4,
+  },
+
+  button: {
+    marginTop: 14,
+    backgroundColor: COLORS.primary,
+    paddingVertical: 12,
+    borderRadius: 14,
+    alignItems: "center",
+  },
+
+  buttonText: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 14,
+  },
 });
