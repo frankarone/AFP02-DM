@@ -22,7 +22,7 @@ export default function App() {
 
   return (
     <>
-      < DamageListScreen />
+      <  DamageDetailScreen />
       <StatusBar style="auto" />
     </>
   );

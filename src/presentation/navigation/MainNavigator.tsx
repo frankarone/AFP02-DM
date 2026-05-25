@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Text } from 'react-native';
 import { DashboardScreen } from '../modules/main/dashboard/screens/DashboardScreen';
-import { CatalogScreen } from '../modules/main/catalog/screens/CatalogScreen';
 import { CartScreen } from '../modules/main/cart/screens/CartScreen';
 import { OrdersScreen } from '../modules/main/orders/screens/OrdersScreen';
 import { PaymentsScreen } from '../modules/main/payments/screens/PaymentsScreen';
@@ -48,7 +47,6 @@ function MainTabs() {
       })}
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ title: 'Inicio' }} />
-      <Tab.Screen name="Catalog"   component={CatalogScreen}   options={{ title: 'Catálogo' }} />
       <Tab.Screen name="Cart"      component={CartScreen}      options={{ title: 'Carrito' }} />
       <Tab.Screen name="Orders"    component={OrdersScreen}    options={{ title: 'Órdenes' }} />
       <Tab.Screen name="Profile"   component={ProfileScreen}   options={{ title: 'Perfil' }} />
