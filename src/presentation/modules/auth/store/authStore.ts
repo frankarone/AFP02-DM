@@ -2,9 +2,13 @@ import { create } from 'zustand';
 import { container } from '../../../../infrastructure/di/container';
 import type { RegisterData } from '../../../../domain/repositories/IAuthRepository';
 
+// datos del usuario logueado
 type AuthUser = {
   email: string;
   name: string;
+  photo?: string | null;
+  notifications?: boolean;
+  simpleMode?: boolean;
 };
 
 type AuthStore = {
@@ -19,6 +23,9 @@ type AuthStore = {
   updatePassword: (current: string, next: string) => Promise<boolean>;
   checkSession: () => Promise<void>;
   clearError: () => void;
+
+  // función para actualizar datos del perfil
+  updateProfile: (data: Partial<AuthUser>) => void;
 };
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -82,6 +89,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
   logout: async () => {
     set({ isAuthenticated: false, user: null });
   },
+
+   // actualiza datos del perfil
+  updateProfile: (data) =>
+    set((state) => ({
+      user: state.user ? { ...state.user, ...data } : null,
+    })),
 
   clearError: () => set({ error: null }),
 }));

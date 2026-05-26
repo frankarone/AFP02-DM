@@ -2,11 +2,13 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../../auth/store/authStore';
-
+import { useNavigation } from '@react-navigation/native';
 
 export default function DashboardScreen() {
 
   // funciones
+  const navigation = useNavigation<any>();
+
   const registrarDano = () => {
     Alert.alert('Registrar daño', 'Aquí irá la pantalla para registrar daños de fruta');
   };
@@ -17,6 +19,10 @@ export default function DashboardScreen() {
 
   const generarReportes = () => {
     Alert.alert('Generar reportes', 'Aquí se generará el reporte para el cliente');
+  };
+
+  const perfilUsuario = () => {
+    navigation.navigate('Profile');
   };
 
   const { logout } = useAuthStore();
@@ -47,6 +53,11 @@ export default function DashboardScreen() {
         <TouchableOpacity style={styles.card} onPress={generarReportes}>
           <Ionicons name="document-text-outline" size={35} color="#f39c12" />
           <Text style={styles.textoCard}>Generar reportes</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.card} onPress={perfilUsuario}>
+          <Ionicons name="person-outline" size={35} color="#9b59b6" />
+          <Text style={styles.textoCard}>Perfil de usuario</Text>
         </TouchableOpacity>
 
         
