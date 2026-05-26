@@ -3,14 +3,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View , Text , Image , StyleSheet } from 'react-native';
 import { DashboardScreen } from '../modules/main/dashboard/screens/DashboardScreen';
 import { ProfileScreen } from '../modules/profile/screens/ProfileScreen';
-import { RegistroDañoScreen } from '../modules/main/registrodaño/screens/RegistroDañoScreen';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../modules/auth/store/authStore';
+import { RegistroDanoScreen } from '../modules/main/registrodaño/screens/RegistroDanoScreen';
 
 export type MainStackParamList = {
   Dashboard: undefined;
   Profile: undefined;
-  RegistroDaño: undefined;
+  RegistroDano: undefined;
 };
 
 
@@ -53,7 +53,7 @@ export function MainNavigator() {
 
       <Stack.Screen name="Dashboard" component={DashboardScreen}/>
       <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="RegistroDaño" component={RegistroDañoScreen} />
+      <Stack.Screen name="RegistroDano" component={RegistroDanoScreen} />
     </Stack.Navigator>
   );
 }
