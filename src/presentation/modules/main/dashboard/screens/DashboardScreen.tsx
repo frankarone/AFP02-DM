@@ -1,157 +1,259 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useAuthStore } from '../../../auth/store/authStore';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
+import { useAuthStore } from "../../../auth/store/authStore";
+import * as Progress from "react-native-progress";
 
-export default function DashboardScreen() {
+export function DashboardScreen() {
+  const { user, logout } = useAuthStore();
+  const [value, setValue] = useState(0);
 
-  // funciones
-  const navigation = useNavigation<any>();
-
-  const registrarDano = () => {
-    Alert.alert('Registrar daño', 'Aquí irá la pantalla para registrar daños de fruta');
+  const greeting = () => {
+    const h = new Date().getHours();
+    if (h < 12) return "Buenos días";
+    if (h < 18) return "Buenas tardes";
+    return "Buenas noches";
   };
 
-  const verRegistros = () => {
-    Alert.alert('Ver registros', 'Aquí se mostrarán los registros guardados');
-  };
+  //ANIMACION DE PROGRESO
+  useEffect(() => {
+    let progress = 0;
 
-  const generarReportes = () => {
-    Alert.alert('Generar reportes', 'Aquí se generará el reporte para el cliente');
-  };
+    const interval = setInterval(() => {
+      progress += 0.05;
+      if (progress >= 1) {
+        progress = 1;
+        clearInterval(interval);
+      }
+      setValue(progress);
+    }, 100);
 
-  const perfilUsuario = () => {
-    navigation.navigate('Profile');
-  };
+    return () => clearInterval(interval);
+  }, []);
 
-  const { logout } = useAuthStore();
-  const cerrarSesion = () => {
-    logout();
-  };
-
-  //frontend del dashboard
   return (
-    <View style={styles.container}>      
-      <Text style={styles.titulo}>OPERACIONES</Text>  
-      <Text style={styles.subtitulo}>Control de daños de frutas</Text>
+    <SafeAreaView style={styles.safe}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scroll}
+      >
+        {/* HEADER */}
+        <View style={styles.header}>
+          <Image
+            source={require("../../../../../../assets/Logo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
 
-      {/* contenedor de opciones */}
-      <View style={styles.grid}>
+          <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
+            <Text style={styles.logoutText}>Salir</Text>
+          </TouchableOpacity>
+        </View>
 
-        <TouchableOpacity style={styles.card} onPress={registrarDano}>
-          <Ionicons name="create-outline" size={35} color="#2e86de" />
-          <Text style={styles.textoCard}>Registrar daño</Text>
-        </TouchableOpacity>
-      
-        <TouchableOpacity style={styles.card} onPress={verRegistros}>
-          <Ionicons name="list-outline" size={35} color="#27ae60" />
-          <Text style={styles.textoCard}>Ver registros</Text>
-        </TouchableOpacity>
+        {/* BIENVENIDA */}
+        <View style={styles.greetingBox}>
+          <Text style={styles.greeting}>{greeting()},</Text>
+          <Text style={styles.userName}>{user?.name ?? "Usuario"}</Text>
 
-  
-        <TouchableOpacity style={styles.card} onPress={generarReportes}>
-          <Ionicons name="document-text-outline" size={35} color="#f39c12" />
-          <Text style={styles.textoCard}>Generar reportes</Text>
-        </TouchableOpacity>
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>Sistema AGRIHUSAC 🌱</Text>
+          </View>
+        </View>
 
-        <TouchableOpacity style={styles.card} onPress={perfilUsuario}>
-          <Ionicons name="person-outline" size={35} color="#9b59b6" />
-          <Text style={styles.textoCard}>Perfil de usuario</Text>
-        </TouchableOpacity>
+        {/* DASHBOARD */}
+        <View style={styles.modulesContainer}>
+          {/* REGISTROS */}
+          <TouchableOpacity activeOpacity={0.9} style={styles.moduleCard}>
+            <Text style={styles.cardTitle}>Registros de Daños</Text>
 
-        
-        <TouchableOpacity style={styles.card} onPress={cerrarSesion}>
-          <Ionicons name="log-out-outline" size={35} color="#e74c3c" />
-          <Text style={styles.textoCard}>Cerrar sesión</Text>
-        </TouchableOpacity>
+            <View style={styles.previewGrid}>
+              {[1, 2, 3, 4].map((i) => (
+                <Image
+                  key={i}
+                  source={{ uri: `https://picsum.photos/200/200?random=${i}` }}
+                  style={styles.smallImage}
+                />
+              ))}
+            </View>
+          </TouchableOpacity>
 
-      </View>
+          {/* PROGRESO */}
+          <TouchableOpacity activeOpacity={0.9} style={styles.moduleCard}>
+            <Text style={styles.cardTitle}>Estado del Sistema</Text>
 
-      {/*puntos*/}
-      <View style={styles.puntos}>
-        <View style={styles.puntoVacio} />
-        <View style={styles.puntoActivo} />
-        <View style={styles.puntoVacio} />
-        <View style={styles.puntoVacio} />
-        <View style={styles.puntoVacio} />
-      </View>
+            <View style={styles.previewGrid}>
+              <View style={styles.chartBox}>
+                <Progress.Circle
+                  size={85}
+                  progress={value}
+                  thickness={8}
+                  color="#2E7D32"
+                  unfilledColor="#E8F5E9"
+                  borderWidth={0}
+                  showsText={true}
+                  formatText={() => `${Math.round(value * 100)}%`}
+                />
+                <Text style={styles.chartText}>Progreso</Text>
+              </View>
 
-    </View>
+              <View style={styles.chartBox}>
+                <Progress.Circle
+                  size={85}
+                  progress={0.3}
+                  thickness={8}
+                  color="#8D6E63"
+                  unfilledColor="#EFEBE9"
+                  borderWidth={0}
+                  showsText={true}
+                  formatText={() => `30%`}
+                />
+                <Text style={styles.chartText}>Daños</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
-//estilos
+/* PALETA AGRIHUSAC */
+const COLORS = {
+  primary: "#2E7D32",
+  secondary: "#66BB6A",
+  accent: "#A5D6A7",
+  earth: "#8D6E63",
+  background: "#F4F8F5",
+  white: "#FFFFFF",
+  text: "#263238",
+};
+
+/* ESTILOS */
 const styles = StyleSheet.create({
-  
-  container: {
+  safe: {
     flex: 1,
-    backgroundColor: '#e4dede',
+    backgroundColor: COLORS.background,
+  },
+
+  scroll: {
     padding: 20,
-    justifyContent: 'center',
+    paddingBottom: 50,
   },
 
-  titulo: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#222',
-    marginBottom: 5,
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 24,
   },
 
-  subtitulo: {
-    fontSize: 16,
-    textAlign: 'center',
-    color: '#555',
-    marginBottom: 30,
+  logo: {
+    width: 140,
+    height: 60,
   },
 
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+  logoutBtn: {
+    backgroundColor: "#D32F2F",
+    paddingHorizontal: 18,
+    paddingVertical: 8,
+    borderRadius: 25,
   },
 
-  card: {
-    width: '47%',
-    height: 130,
-    backgroundColor: '#c0fa8a',
-    borderRadius: 10,
-    marginBottom: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#160303',
+  logoutText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "700",
   },
 
-  textoCard: {
-    marginTop: 10,
+  greetingBox: {
+    backgroundColor: COLORS.primary,
+    borderRadius: 18,
+    padding: 20,
+    marginBottom: 28,
+  },
+
+  greeting: {
+    color: COLORS.accent,
     fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#333',
   },
 
-  puntos: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 25,
+  userName: {
+    color: "#fff",
+    fontSize: 26,
+    fontWeight: "800",
+    marginTop: 4,
   },
 
-  puntoActivo: {
-    width: 12,
-    height: 12,
-    backgroundColor: '#000',
-    borderRadius: 6,
-    marginHorizontal: 6,
+  badge: {
+    marginTop: 10,
+    backgroundColor: "#1B5E20",
+    alignSelf: "flex-start",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
   },
 
-  puntoVacio: {
-    width: 12,
-    height: 12,
-    borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 6,
-    marginHorizontal: 6,
+  badgeText: {
+    color: "#C8E6C9",
+    fontSize: 11,
+    fontWeight: "600",
+  },
+
+  modulesContainer: {
+    gap: 20,
+  },
+
+  moduleCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: 20,
+    padding: 16,
+
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+  },
+
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    marginBottom: 14,
+    color: COLORS.text,
+  },
+
+  previewGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+
+  smallImage: {
+    width: "48%",
+    height: 90,
+    borderRadius: 14,
+    marginBottom: 10,
+  },
+
+  chartBox: {
+    width: "48%",
+    alignItems: "center",
+    backgroundColor: "#F1F8E9",
+    padding: 14,
+    borderRadius: 14,
+  },
+
+  chartText: {
+    marginTop: 8,
+    fontSize: 12,
+    fontWeight: "600",
+    color: COLORS.text,
   },
 });
