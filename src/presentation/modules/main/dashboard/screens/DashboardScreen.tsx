@@ -14,7 +14,7 @@ export function DashboardScreen() {
   };
 
   const verRegistros = () => {
-    Alert.alert('Ver registros', 'Aquí se mostrarán los registros guardados');
+    navigation.navigate('ListDano');
   };
 
   const generarReportes = () => {
