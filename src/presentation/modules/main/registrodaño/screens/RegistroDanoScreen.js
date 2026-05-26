@@ -64,7 +64,11 @@ export function RegistroDanoScreen() {
       cantidad,
       descripcion,
       imagen,
-      fecha: new Date(),
+      fecha,
+      fuc,
+      guia,
+      productor,
+      cliente,
     };
 
     console.log(nuevoRegistro);
@@ -95,10 +99,18 @@ export function RegistroDanoScreen() {
       <Text style={styles.titulo}>Registrar Daño</Text>
 
       <View style={styles.card}>
+        <Input label="Fecha *" value={fecha} onChange={setFecha} placeholder="Ej: 2026-05-26" />
         <Input label="Tipo de fruta *" value={fruta} onChange={setFruta} placeholder="Ej: Mango" />
+        <Input label="Variedad" value={variedad} onChange={setVariedad} placeholder="Ej: Kent" />
         <Input label="Tipo de daño *" value={tipoDano} onChange={setTipoDano} placeholder="Ej: Golpe" />
         <Input label="Cantidad *" value={cantidad} onChange={setCantidad} placeholder="Ej: 10" keyboard="numeric" />
         <Input label="Descripción" value={descripcion} onChange={setDescripcion} multiline />
+
+        <Input label="FUC" value={fuc} onChange={setFuc} placeholder="Código FUC" />
+        <Input label="Guía" value={guia} onChange={setGuia} placeholder="N° Guía" />
+        <Input label="Productor" value={productor} onChange={setProductor} placeholder="Nombre del productor" />
+        <Input label="Cliente" value={cliente} onChange={setCliente} placeholder="Nombre del cliente" />
+
 
         {/* Botones de imagen */}
         <View style={styles.row}>
