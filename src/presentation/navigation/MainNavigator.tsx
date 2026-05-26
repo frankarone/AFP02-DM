@@ -5,10 +5,12 @@ import DashboardScreen from '../modules/main/dashboard/screens/DashboardScreen';
 import { ProfileScreen } from '../modules/profile/screens/ProfileScreen';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../modules/auth/store/authStore';
+import { RegistroDanoScreen } from '../modules/main/registrodaño/screens/RegistroDanoScreen';
 
 export type MainStackParamList = {
   Dashboard: undefined;
   Profile: undefined;
+  RegistroDano: undefined;
 };
 
 
@@ -51,6 +53,7 @@ export function MainNavigator() {
 
       <Stack.Screen name="Dashboard" component={DashboardScreen}/>
       <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="RegistroDano" component={RegistroDanoScreen} />
     </Stack.Navigator>
   );
 }

@@ -10,7 +10,7 @@ export default function DashboardScreen() {
   const navigation = useNavigation<any>();
 
   const registrarDano = () => {
-    Alert.alert('Registrar daño', 'Aquí irá la pantalla para registrar daños de fruta');
+    navigation.navigate('RegistroDano');
   };
 
   const verRegistros = () => {

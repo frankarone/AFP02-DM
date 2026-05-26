@@ -12,7 +12,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 
-export function RegistroDañoScreen() {
+export function RegistroDanoScreen() {
   const [fruta, setFruta] = useState("");
   const [tipoDano, setTipoDano] = useState("");
   const [cantidad, setCantidad] = useState("");
@@ -111,7 +111,7 @@ export function RegistroDañoScreen() {
   );
 }
 
-/* 🔹 Componente reutilizable */
+/* Componente reutilizable */
 type InputProps = {
   label: string;
   value: string;
