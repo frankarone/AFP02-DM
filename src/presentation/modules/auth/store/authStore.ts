@@ -28,17 +28,35 @@ export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
 
   checkSession: async () => {
-    const hasSession = await container.checkSessionUseCase.execute();
-    if (hasSession) set({ isAuthenticated: true });
+    try {
+      const hasSession = await container.checkSessionUseCase.execute();
+      if (hasSession) {
+        // 🚀 Construimos un usuario básico (puedes mejorar esto con datos reales)
+        set({
+          isAuthenticated: true,
+          user: { email: 'demo@correo.com', name: 'Demo' },
+        });
+      }
+    } catch {
+      set({ isAuthenticated: false, user: null });
+    }
   },
 
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
       await container.loginUseCase.execute({ email, password });
-      set({ isAuthenticated: true, isLoading: false, user: { email, name: email.split('@')[0] } });
+      // 🚀 Construimos el user manualmente
+      set({
+        isAuthenticated: true,
+        isLoading: false,
+        user: { email, name: email.split('@')[0] },
+      });
     } catch (e: any) {
-      set({ isLoading: false, error: e?.message ?? 'Usuario o contraseña incorrectos' });
+      set({
+        isLoading: false,
+        error: e?.message ?? 'Usuario o contraseña incorrectos',
+      });
     }
   },
 
@@ -51,7 +69,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
         user: { email: user.email, name: `${user.name} ${user.lastName}` },
       });
     } catch (e: any) {
-      set({ isLoading: false, error: e?.message ?? 'Error al registrar usuario' });
+      set({
+        isLoading: false,
+        error: e?.message ?? 'Error al registrar usuario',
+      });
     }
   },
 
@@ -62,7 +83,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({ isLoading: false });
       return true;
     } catch (e: any) {
-      set({ isLoading: false, error: e?.message ?? 'Error al enviar correo de recuperación' });
+      set({
+        isLoading: false,
+        error: e?.message ?? 'Error al enviar correo de recuperación',
+      });
       return false;
     }
   },
@@ -74,13 +98,24 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({ isLoading: false });
       return true;
     } catch (e: any) {
-      set({ isLoading: false, error: e?.message ?? 'Error al actualizar contraseña' });
+      set({
+        isLoading: false,
+        error: e?.message ?? 'Error al actualizar contraseña',
+      });
       return false;
     }
   },
 
   logout: async () => {
-    set({ isAuthenticated: false, user: null });
+    try {
+      if (container.logoutUseCase) {
+        await container.logoutUseCase.execute();
+      }
+    } catch {
+      // opcional: manejar error de logout
+    } finally {
+      set({ isAuthenticated: false, user: null });
+    }
   },
 
   clearError: () => set({ error: null }),

@@ -39,6 +39,9 @@ export function LoginScreen({ navigation }: Props) {
     await login(data.email, data.password);
     if (useAuthStore.getState().error) {
       Alert.alert('Error', useAuthStore.getState().error ?? 'Error al iniciar sesión');
+    } else {
+      // 🚀 Navegar automáticamente al perfil si el login fue exitoso
+      navigation.navigate('Profile');
     }
   };
 
@@ -58,9 +61,7 @@ export function LoginScreen({ navigation }: Props) {
 
         {/* Campo usuario */}
         <View style={[styles.inputWrapper, !!errors.email && styles.inputWrapperError]}>
-          <View style={styles.iconBox}>
-            {/* <Text style={styles.icon}>👤</Text> */}
-          </View>
+          <View style={styles.iconBox} />
           <Controller
             control={control}
             name="email"
@@ -83,9 +84,7 @@ export function LoginScreen({ navigation }: Props) {
 
         {/* Campo contraseña */}
         <View style={[styles.inputWrapper, !!errors.password && styles.inputWrapperError]}>
-          <View style={styles.iconBox}>
-            {/* <Text style={styles.icon}>🔒</Text> */}
-          </View>
+          <View style={styles.iconBox} />
           <Controller
             control={control}
             name="password"
@@ -105,7 +104,7 @@ export function LoginScreen({ navigation }: Props) {
         </View>
         {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
 
-        {/* Botón */}
+        {/* Botón login */}
         <TouchableOpacity
           style={[styles.button, isLoading && styles.buttonDisabled]}
           onPress={handleSubmit(onSubmit)}
@@ -116,6 +115,14 @@ export function LoginScreen({ navigation }: Props) {
             ? <ActivityIndicator color="#fff" />
             : <Text style={styles.buttonText}>ENTRAR AL SISTEMA</Text>
           }
+        </TouchableOpacity>
+
+        {/* Botón extra: Ver perfil de usuario */}
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: '#1A73E8' }]}
+          onPress={() => navigation.navigate('Profile')}
+        >
+          <Text style={styles.buttonText}>Ver perfil de usuario</Text>
         </TouchableOpacity>
 
         {/* Links */}
@@ -170,9 +177,6 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderRightColor: '#E0E0E0',
     paddingVertical: 14,
-  },
-  icon: {
-    fontSize: 18,
   },
   input: {
     flex: 1,

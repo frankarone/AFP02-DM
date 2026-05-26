@@ -21,7 +21,8 @@ import {
   RefreshControl,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { colors, spacing } from '../../../core/theme';
+import { colors, spacing, borderRadius } from './theme';
+
 import {
   ProfileHeader,
   AvatarPicker,
@@ -29,8 +30,7 @@ import {
   SettingsSelect,
   InfoCard,
 } from '../components';
-import type { SelectOption } from '../components/SettingsSelect';
-
+import type { SelectOption } from '../components/SettingsSelect'
 
 type ProfileData = {
   id: string;
