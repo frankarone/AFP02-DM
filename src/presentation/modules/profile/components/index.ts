@@ -1,2 +1,6 @@
-// Profile-specific components (e.g. AvatarPicker, EditProfileForm)
-export {};
+export { AvatarPicker } from './AvatarPicker';
+export { InfoCard } from './InfoCard';
+export { ProfileHeader } from './ProfileHeader';
+export { SettingsSelect } from './SettingsSelect';
+export { SettingsToggle } from './SettingsToggle';
+

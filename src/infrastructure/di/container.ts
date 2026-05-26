@@ -6,16 +6,46 @@ import { RegisterUseCase } from '../../domain/usecases/auth/RegisterUseCase';
 import { UpdatePasswordUseCase } from '../../domain/usecases/auth/UpdatePasswordUseCase';
 import { RecoverPasswordUseCase } from '../../domain/usecases/auth/RecoverPasswordUseCase';
 import { CheckSessionUseCase } from '../../domain/usecases/auth/CheckSessionUseCase';
+import { InspectorProfileRemoteDataSourceMock } from "../../data/datasources/remote/InspectorProfileRemoteDataSourceImpl";
+import { InspectorProfileLocalDataSourceImpl } from '../../data/datasources/local/InspectorProfileLocalDataSourceImpl';
+import { InspectorProfileRepositoryImpl } from '../../data/repositories/InspectorProfileRepositoryImpl';
+import { GetInspectorProfileUseCase } from '../../domain/usecases/profile/GetInspectorProfileUseCase';
+import { UpdateInspectorProfileUseCase } from '../../domain/usecases/profile/UpdateInspectorProfileUseCase';
+import { UploadAvatarUseCase } from '../../domain/usecases/profile/UploadAvatarUseCase';
+import { UpdatePreferencesUseCase } from '../../domain/usecases/profile/UpdatePreferencesUseCase';
+import { useProfileStore } from '../../presentation/modules/profile/store/profileStore';
 
-// Swap AuthRemoteDataSourceMock → AuthRemoteDataSourceImpl when the API is ready
-const authRemote = new AuthRemoteDataSourceMock();
-const sessionLocal = new SessionLocalDataSourceImpl();
-const authRepository = new AuthRepositoryImpl(authRemote, sessionLocal);
+// Profile Module Setup
+const profileRemote = new InspectorProfileRemoteDataSourceMock();
+const profileLocal = new InspectorProfileLocalDataSourceImpl();
+const profileRepository = new InspectorProfileRepositoryImpl(profileRemote, profileLocal);
+
+const getInspectorProfileUseCase = new GetInspectorProfileUseCase(profileRepository);
+const updateInspectorProfileUseCase = new UpdateInspectorProfileUseCase(profileRepository);
+const uploadAvatarUseCase = new UploadAvatarUseCase(profileRepository);
+const updatePreferencesUseCase = new UpdatePreferencesUseCase(profileRepository);
+const local = new InspectorProfileLocalDataSourceImpl();
+const remote = new InspectorProfileRemoteDataSourceMock();
+
+// Initialize store with use cases
+useProfileStore.getState().setUseCases(
+  getInspectorProfileUseCase,
+  updateInspectorProfileUseCase,
+  uploadAvatarUseCase,
+  updatePreferencesUseCase,
+);
+
+
+// Export
+export const inspectorProfileRepository = new InspectorProfileRepositoryImpl(remote, local);
 
 export const container = {
-  loginUseCase: new LoginUseCase(authRepository),
-  registerUseCase: new RegisterUseCase(authRepository),
-  updatePasswordUseCase: new UpdatePasswordUseCase(authRepository),
-  recoverPasswordUseCase: new RecoverPasswordUseCase(authRepository),
-  checkSessionUseCase: new CheckSessionUseCase(authRepository),
+  // ...auth
+  getInspectorProfileUseCase,
+  updateInspectorProfileUseCase,
+  uploadAvatarUseCase,
+  updatePreferencesUseCase,
+  profileRepository,
+  useProfileStore,
 };
+

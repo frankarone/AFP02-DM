@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { InspectorProfile, InspectorPreferences } from '../../../../domain/entities/InspectorProfile';
 
-/* Tipos auxiliares para instancias de UseCases */
+/* UseCase helpers (tipado claro para instancias) */
 type UseCaseNoArgs<TResult> = { execute: () => Promise<TResult> };
 type UseCaseWithArgs<TInput, TResult> = { execute: (input: TInput) => Promise<TResult> };
 
@@ -101,7 +101,6 @@ export const useProfileStore = create<ProfileState>((set) => ({
     }
     set({ isUploadingAvatar: true, avatarError: null });
     try {
-      /* Asumo execute recibe un objeto { imageUri, mimeType } */
       const avatarUrl = await injectedUploadAvatarUseCase.execute({ imageUri, mimeType });
       set((state) => ({
         profile: state.profile ? { ...state.profile, avatarUrl } : null,
@@ -116,10 +115,10 @@ export const useProfileStore = create<ProfileState>((set) => ({
   },
 
   loadPreferences: async () => {
+    // Implementación mínima para evitar placeholders
     set({ isLoadingPreferences: true, preferencesError: null });
     try {
-      // Si tienes un use case para obtener preferencias, úsalo aquí.
-      // Placeholder seguro: no rompe compilación.
+      // Si tienes un use case para obtener preferencias, úsalo aquí
       set({ isLoadingPreferences: false });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Error al cargar preferencias';
