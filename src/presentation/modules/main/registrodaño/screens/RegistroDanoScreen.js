@@ -16,13 +16,20 @@ import { useAuthStore } from "../../../auth/store/authStore";
 export function RegistroDanoScreen() {
   const user = useAuthStore((s) => s.user);
   const isAdmin = user?.role === "admin";
-
+  const [fecha, setFecha] = useState("");
+  const [variedad, setVariedad] = useState("");
+  const [fuc, setFuc] = useState("");
+  const [guia, setGuia] = useState("");
+  const [productor, setProductor] = useState("");
+  const [cliente, setCliente] = useState("");
   const [fruta, setFruta] = useState("");
   const [tipoDano, setTipoDano] = useState("");
   const [cantidad, setCantidad] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [imagen, setImagen] = useState(null);
 
+
+  // Función para tomar foto con la cámara
   const tomarFoto = async () => {
     const permiso = await ImagePicker.requestCameraPermissionsAsync();
 
@@ -41,6 +48,7 @@ export function RegistroDanoScreen() {
     }
   };
 
+  // Función para elegir imagen desde la galería
   const elegirDesdeGaleria = async () => {
     const resultado = await ImagePicker.launchImageLibraryAsync({
       quality: 0.7,
@@ -52,8 +60,9 @@ export function RegistroDanoScreen() {
     }
   };
 
+  // Fucion para guardar el registro
   const guardarRegistro = () => {
-    if (!fruta || !tipoDano || !cantidad) {
+    if (!fruta || !tipoDano || !cantidad ) {
       Alert.alert("Error", "Completa los campos obligatorios");
       return;
     }
@@ -74,11 +83,17 @@ export function RegistroDanoScreen() {
     console.log(nuevoRegistro);
     Alert.alert("Éxito", "Daño registrado correctamente");
 
+    // Limpiar formulario
     setFruta("");
     setTipoDano("");
     setCantidad("");
     setDescripcion("");
     setImagen(null);
+    setFecha("");
+    setFuc("");
+    setGuia("");
+    setProductor("");
+    setCliente("");
   };
 
   // Solo los administradores pueden registrar daños (modo consulta para usuarios).
@@ -88,49 +103,122 @@ export function RegistroDanoScreen() {
         <Ionicons name="lock-closed-outline" size={60} color="#e74c3c" />
         <Text style={styles.bloqueadoTitulo}>Acceso restringido</Text>
         <Text style={styles.bloqueadoTexto}>
-          Solo los administradores pueden registrar daños. Tu cuenta está en modo consulta.
+          Solo los administradores pueden registrar daños. Tu cuenta está en
+          modo consulta.
         </Text>
       </View>
     );
   }
 
   return (
-    <ScrollView contentContainerStyle={{ ...styles.container, justifyContent: "center" }}>
+    <ScrollView
+      contentContainerStyle={{ ...styles.container, justifyContent: "center" }}
+    >
       <Text style={styles.titulo}>Registrar Daño</Text>
 
       <View style={styles.card}>
-        <Input label="Fecha *" value={fecha} onChange={setFecha} placeholder="Ej: 2026-05-26" />
-        <Input label="Tipo de fruta *" value={fruta} onChange={setFruta} placeholder="Ej: Mango" />
-        <Input label="Variedad" value={variedad} onChange={setVariedad} placeholder="Ej: Kent" />
-        <Input label="Tipo de daño *" value={tipoDano} onChange={setTipoDano} placeholder="Ej: Golpe" />
-        <Input label="Cantidad *" value={cantidad} onChange={setCantidad} placeholder="Ej: 10" keyboard="numeric" />
-        <Input label="Descripción" value={descripcion} onChange={setDescripcion} multiline />
+        <Text style={styles.label}>Fecha *</Text>
+        <TextInput
+          style={styles.input}
+          value={fecha}
+          onChangeText={setFecha}
+          placeholder="Ej: 2026-05-26"
+        />
 
-        <Input label="FUC" value={fuc} onChange={setFuc} placeholder="Código FUC" />
-        <Input label="Guía" value={guia} onChange={setGuia} placeholder="N° Guía" />
-        <Input label="Productor" value={productor} onChange={setProductor} placeholder="Nombre del productor" />
-        <Input label="Cliente" value={cliente} onChange={setCliente} placeholder="Nombre del cliente" />
+        <Text style={styles.label}>Tipo de fruta *</Text>
+        <TextInput
+          style={styles.input}
+          value={fruta}
+          onChangeText={setFruta}
+          placeholder="Ej: Mango"
+        />
 
+        <Text style={styles.label}>Variedad</Text>
+        <TextInput
+          style={styles.input}
+          value={variedad}
+          onChangeText={setVariedad}
+          placeholder="Ej: Kent"
+        />
 
-        {/* Botones de imagen */}
+        <Text style={styles.label}>Tipo de daño *</Text>
+        <TextInput
+          style={styles.input}
+          value={tipoDano}
+          onChangeText={setTipoDano}
+          placeholder="Ej: Golpe"
+        />
+
+        <Text style={styles.label}>Cantidad *</Text>
+        <TextInput
+          style={styles.input}
+          value={cantidad}
+          onChangeText={setCantidad}
+          placeholder="Ej: 10"
+          keyboardType="numeric"
+        />
+
+        <Text style={styles.label}>Descripción</Text>
+        <TextInput
+          style={[styles.input, styles.textArea]}
+          value={descripcion}
+          onChangeText={setDescripcion}
+          multiline
+          placeholder="Opcional..."
+        />
+
+        <Text style={styles.label}>FUC</Text>
+        <TextInput
+          style={styles.input}
+          value={fuc}
+          onChangeText={setFuc}
+          placeholder="Código FUC"
+        />
+
+        <Text style={styles.label}>Guía</Text>
+        <TextInput
+          style={styles.input}
+          value={guia}
+          onChangeText={setGuia}
+          placeholder="N° Guía"
+        />
+
+        <Text style={styles.label}>Productor</Text>
+        <TextInput
+          style={styles.input}
+          value={productor}
+          onChangeText={setProductor}
+          placeholder="Nombre del productor"
+        />
+
+        <Text style={styles.label}>Cliente</Text>
+        <TextInput
+          style={styles.input}
+          value={cliente}
+          onChangeText={setCliente}
+          placeholder="Nombre del cliente"
+        />
+
+        {/* Botones para tomar foto o elegir de galería */}
         <View style={styles.row}>
           <TouchableOpacity style={styles.btnSecundario} onPress={tomarFoto}>
             <Ionicons name="camera-outline" size={20} color="#fff" />
             <Text style={styles.textoBtn}>Cámara</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.btnSecundario} onPress={elegirDesdeGaleria}>
+          <TouchableOpacity
+            style={styles.btnSecundario}
+            onPress={elegirDesdeGaleria}
+          >
             <Ionicons name="image-outline" size={20} color="#fff" />
             <Text style={styles.textoBtn}>Galería</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Preview */}
         {imagen && (
           <Image source={{ uri: imagen }} style={styles.imagenPreview} />
         )}
 
-        {/* Botón principal */}
         <TouchableOpacity style={styles.boton} onPress={guardarRegistro}>
           <Ionicons name="save-outline" size={20} color="#fff" />
           <Text style={styles.textoBoton}>Guardar Registro</Text>
@@ -140,29 +228,7 @@ export function RegistroDanoScreen() {
   );
 }
 
-/* Componente reutilizable */
-function Input({
-  label,
-  value,
-  onChange,
-  placeholder = "",
-  multiline = false,
-  keyboard = "default",
-}) {
-  return (
-    <>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput
-        style={[styles.input, multiline && styles.textArea]}
-        value={value}
-        onChangeText={onChange}
-        placeholder={placeholder}
-        multiline={multiline}
-        keyboardType={keyboard}
-      />
-    </>
-  );
-}
+// Estilos
 
 const styles = StyleSheet.create({
   container: {
