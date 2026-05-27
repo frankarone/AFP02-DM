@@ -7,12 +7,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../modules/auth/store/authStore';
 import { RegistroDanoScreen } from '../modules/main/registrodaño/screens/RegistroDanoScreen';
 import { DamageListScreen } from '../modules/main/catalog/screens/DamageListScreen';
+import { ChangePasswordScreen } from '../modules/profile/screens/ChangePasswordScreen';
 
 export type MainStackParamList = {
   Dashboard: undefined;
   Profile: undefined;
   RegistroDano: undefined;
   ListDano: undefined;
+  ChangePassword: undefined;
 };
 
 
@@ -56,6 +58,7 @@ export function MainNavigator() {
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="RegistroDano" component={RegistroDanoScreen} />
       <Stack.Screen name="ListDano" component={DamageListScreen} />
+      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
     </Stack.Navigator>
   );
 }

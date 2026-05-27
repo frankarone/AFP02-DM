@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert, Switch, ScrollView, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAuthStore } from '../../auth/store/authStore';
+import type { MainStackParamList } from '../../../navigation/MainNavigator';
 
+type Props = NativeStackScreenProps<MainStackParamList, 'Profile'>;
 
-export function ProfileScreen() {
+export function ProfileScreen({ navigation }: Props) {
 
   //funciones
   const user = useAuthStore((s) => s.user);
@@ -136,6 +139,17 @@ export function ProfileScreen() {
 
       </View>
 
+      <View style={styles.card}>
+        <Text style={styles.subtitulo}>Seguridad</Text>
+        <TouchableOpacity 
+          style={styles.botonCambiarContraseña}
+          onPress={() => navigation.navigate('ChangePassword')}
+        >
+          <Ionicons name="lock-closed" size={20} color="#fff" style={{ marginRight: 8 }} />
+          <Text style={styles.textoBoton}>Cambiar contraseña</Text>
+        </TouchableOpacity>
+      </View>
+
     </ScrollView>
   );
 }
@@ -254,5 +268,15 @@ const styles = StyleSheet.create({
   textoPreferencia: {
     fontSize: 15,
     color: '#333',
+  },
+
+  botonCambiarContraseña: {
+    backgroundColor: '#e74c3c',
+    padding: 12,
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    marginTop: 5,
   },
 });
