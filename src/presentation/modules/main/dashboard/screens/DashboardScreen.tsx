@@ -21,6 +21,27 @@ export function DashboardScreen() {
     return 'Buenas noches';
   };
 
+<<<<<<< Updated upstream
+=======
+  const verRegistros = () => {
+    navigation.navigate('ListDano');
+  };
+
+  const generarReportes = () => {
+    navigation.navigate('Reporte'); 
+  };
+
+  const perfilUsuario = () => {
+    navigation.navigate('Profile');
+  };
+
+  const { logout } = useAuthStore();
+  const cerrarSesion = () => {
+    logout();
+  };
+
+  //frontend del dashboard
+>>>>>>> Stashed changes
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.scroll}>
