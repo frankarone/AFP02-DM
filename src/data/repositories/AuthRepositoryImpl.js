@@ -80,7 +80,9 @@ export class AuthRepositoryImpl {
     };
 
     await this.users.create(record);
-    return this.toPublicUser(record);
+    const publicUser = this.toPublicUser(record);
+    console.log('[Auth] register:', JSON.stringify(publicUser, null, 2));
+    return publicUser;
   }
 
   async login({ email, password }) {
@@ -102,7 +104,9 @@ export class AuthRepositoryImpl {
     const token = await Crypto.randomUUID();
     await this.users.setSession({ token, email: record.email, role: record.role });
 
-    return this.toPublicUser(record);
+    const publicUser = this.toPublicUser(record);
+    console.log('[Auth] login:', JSON.stringify(publicUser, null, 2));
+    return publicUser;
   }
 
   async logout() {

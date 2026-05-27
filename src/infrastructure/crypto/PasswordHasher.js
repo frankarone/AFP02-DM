@@ -7,10 +7,13 @@ async function generateSalt() {
 
 // Calcula el hash SHA-256 de (sal + valor).
 async function hashWithSalt(value, salt) {
-  return Crypto.digestStringAsync(
+  const text = `${salt}:${value}`;
+  const hash = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
-    `${salt}:${value}`,
+    text,
   );
+  console.log('[PasswordHasher] hashWithSalt: texto a hashear =', text, '=> hash =', hash);
+  return hash;
 }
 
 // Utilidad para hashear y verificar contraseñas / respuestas de seguridad.
@@ -20,6 +23,7 @@ export const PasswordHasher = {
   async hash(plain) {
     const salt = await generateSalt();
     const hash = await hashWithSalt(plain, salt);
+    console.log('[PasswordHasher] hash: salt generado =', salt, '=> resultado =', { salt, hash });
     return { salt, hash };
   },
 
@@ -27,6 +31,8 @@ export const PasswordHasher = {
   async verify(plain, salt, expectedHash) {
     if (!salt || !expectedHash) return false;
     const hash = await hashWithSalt(plain, salt);
-    return hash === expectedHash;
+    const match = hash === expectedHash;
+    console.log('[PasswordHasher] verify:', { hashCalculado: hash, hashGuardado: expectedHash, coincide: match });
+    return match;
   },
 };

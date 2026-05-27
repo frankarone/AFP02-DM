@@ -44,7 +44,7 @@ export function DashboardScreen() {
 
       {/* Rol del usuario */}
       <Text style={styles.rol}>
-        {isAdmin ? '👑 Administrador' : '👤 Usuario (modo consulta)'}
+        {isAdmin ? ' Administrador' : ' Usuario (modo consulta)'}
       </Text>
 
       {/* contenedor de opciones */}

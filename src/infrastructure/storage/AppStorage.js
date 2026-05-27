@@ -17,11 +17,14 @@ export const AppStorage = {
   // Lee un valor y lo convierte de JSON (o null si no existe).
   async getJSON(key) {
     const raw = await AsyncStorage.getItem(key);
-    return raw ? JSON.parse(raw) : null;
+    const value = raw ? JSON.parse(raw) : null;
+    console.log('[AppStorage] getJSON:', key, JSON.stringify(value, null, 2));
+    return value;
   },
 
   // Guarda un objeto/array como JSON.
   async setJSON(key, value) {
+    console.log('[AppStorage] setJSON:', key, JSON.stringify(value, null, 2));
     await AsyncStorage.setItem(key, JSON.stringify(value));
   },
 };
