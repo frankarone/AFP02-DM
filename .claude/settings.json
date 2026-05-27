@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(\"Limpio\")",
+      "PowerShell(npx expo install expo-crypto 2>&1)",
+      "PowerShell($env:CI = \"1\"; npx expo export --platform android --output-dir .expo-export-check3 2>&1 | Select-Object -Last 30)",
+      "PowerShell($env:CI = \"1\"; npx expo export --platform android --output-dir .expo-check-admin 2>&1 | Select-Object -Last 8)",
+      "PowerShell(npm install --save-dev reactotron-react-native 2>&1)",
+      "PowerShell($env:CI = \"1\"; npx expo export --platform android --output-dir .expo-check-rt 2>&1 | Select-Object -Last 10)",
+      "PowerShell($env:CI = \"1\"; npx expo export --platform android --output-dir .expo-check-nort 2>&1 | Select-Object -Last 6)"
+    ]
+  }
+}
