@@ -8,6 +8,7 @@ import { useAuthStore } from '../modules/auth/store/authStore';
 import { RegistroDanoScreen } from '../modules/main/registrodaño/screens/RegistroDanoScreen';
 import { DamageListScreen } from '../modules/main/catalog/screens/DamageListScreen';
 import { UserAdminScreen } from '../modules/main/admin/screens/UserAdminScreen';
+import { ChangePasswordScreen } from '../modules/profile/screens/ChangePasswordScreen';
 
 export function MainNavigator() {
 
@@ -50,6 +51,7 @@ export function MainNavigator() {
       <Stack.Screen name="RegistroDano" component={RegistroDanoScreen} />
       <Stack.Screen name="ListDano" component={DamageListScreen} />
       <Stack.Screen name="AdminUsers" component={UserAdminScreen} options={{ title: 'Administrar usuarios' }} />
+      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
     </Stack.Navigator>
   );
 }
