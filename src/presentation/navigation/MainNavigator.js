@@ -9,6 +9,7 @@ import { RegistroDanoScreen } from '../modules/main/registrodaño/screens/Regist
 import { DamageListScreen } from '../modules/main/catalog/screens/DamageListScreen';
 import { UserAdminScreen } from '../modules/main/admin/screens/UserAdminScreen';
 import { ChangePasswordScreen } from '../modules/profile/screens/ChangePasswordScreen';
+import { DamageDetailScreen } from '../modules/main/catalog/screens/DamageDetailScreen';
 
 export function MainNavigator() {
 
@@ -50,6 +51,13 @@ export function MainNavigator() {
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="RegistroDano" component={RegistroDanoScreen} />
       <Stack.Screen name="ListDano" component={DamageListScreen} />
+      <Stack.Screen
+        name="DamageDetail"
+        component={DamageDetailScreen}
+        options={{
+          title: 'Detalle del daño',
+        }}
+      />
       <Stack.Screen name="AdminUsers" component={UserAdminScreen} options={{ title: 'Administrar usuarios' }} />
       <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
     </Stack.Navigator>

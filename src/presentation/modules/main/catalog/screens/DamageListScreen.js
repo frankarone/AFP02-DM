@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 // DATOS TEMPORALES: Luego estos datos se veran desde la BD
+
 const REGISTRO = [
   {
     id: "1",
@@ -21,6 +22,9 @@ const REGISTRO = [
     date: "20/05/2026",
     image:
       "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?q=80&w=1200&auto=format&fit=crop",
+
+    description:
+      "La fruta presenta múltiples golpes en la superficie debido a una mala manipulación durante el transporte y almacenamiento. Se observan zonas oscuras y deformaciones leves que afectan la calidad visual y comercial del producto. Este tipo de daño reduce considerablemente el tiempo de conservación y acelera el proceso de descomposición.",
   },
 
   {
@@ -32,6 +36,9 @@ const REGISTRO = [
     date: "19/05/2026",
     image:
       "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?q=80&w=1200&auto=format&fit=crop",
+
+    description:
+      "La fruta presenta manchas visibles causadas por humedad y exposición prolongada al calor durante el almacenamiento. Estas alteraciones afectan directamente la apariencia del producto y disminuyen su aceptación comercial. Aunque algunas piezas aún pueden consumirse, el deterioro visual evidencia una pérdida parcial de calidad.",
   },
 
   {
@@ -43,6 +50,9 @@ const REGISTRO = [
     date: "18/05/2026",
     image:
       "https://images.unsplash.com/photo-1547514701-42782101795e?q=80&w=1200&auto=format&fit=crop",
+
+    description:
+      "La fruta presenta rajaduras producidas por presión excesiva durante el apilamiento y manipulación. Las grietas exponen el interior del producto, aumentando el riesgo de contaminación, pérdida de frescura y aceleración del deterioro. Este daño afecta seriamente la comercialización del lote.",
   },
 
   {
@@ -54,6 +64,9 @@ const REGISTRO = [
     date: "17/05/2026",
     image:
       "https://images.unsplash.com/photo-1553279768-865429fa0078?q=80&w=1200&auto=format&fit=crop",
+
+    description:
+      "El mango presenta golpes en diferentes zonas debido a impactos durante el traslado y manipulación. Se observan hundimientos leves y cambios de coloración en la pulpa, afectando la calidad visual y reduciendo el tiempo óptimo de consumo del producto.",
   },
 
   {
@@ -65,6 +78,9 @@ const REGISTRO = [
     date: "16/05/2026",
     image:
       "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?q=80&w=1200&auto=format&fit=crop",
+
+    description:
+      "Las manchas observadas en la superficie de la manzana fueron causadas por humedad y almacenamiento inadecuado. El daño afecta principalmente la apariencia externa del producto, disminuyendo su valor comercial y generando señales tempranas de deterioro.",
   },
 
   {
@@ -76,6 +92,9 @@ const REGISTRO = [
     date: "15/05/2026",
     image:
       "https://images.unsplash.com/photo-1514756331096-242fdeb70d4a?q=80&w=1200&auto=format&fit=crop",
+
+    description:
+      "Las peras presentan pequeñas rajaduras producto de una presión inadecuada durante el almacenamiento y transporte. Estas aberturas aceleran el deterioro de la fruta y aumentan la posibilidad de contaminación, reduciendo su tiempo de conservación.",
   },
 
   {
@@ -87,6 +106,9 @@ const REGISTRO = [
     date: "14/05/2026",
     image:
       "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?q=80&w=1200&auto=format&fit=crop",
+
+    description:
+      "Las fresas muestran daños físicos leves ocasionados por manipulación excesiva durante la clasificación y distribución. Se observan zonas blandas y pérdida parcial de firmeza, afectando la calidad general y reduciendo la vida útil del producto.",
   },
 
   {
@@ -98,6 +120,9 @@ const REGISTRO = [
     date: "13/05/2026",
     image:
       "https://images.unsplash.com/photo-1589820296156-2454bb8a6ad1?q=80&w=1200&auto=format&fit=crop",
+
+    description:
+      "La piña presenta manchas externas causadas por almacenamiento prolongado y exposición constante a la humedad. Estas alteraciones reducen significativamente la calidad visual del producto y afectan negativamente su presentación comercial.",
   },
 
   {
@@ -109,6 +134,9 @@ const REGISTRO = [
     date: "12/05/2026",
     image:
       "https://images.unsplash.com/photo-1537640538966-79f369143f8f?q=80&w=1200&auto=format&fit=crop",
+
+    description:
+      "Las uvas presentan pequeñas rajaduras y pérdida de firmeza debido a presión excesiva durante el transporte y almacenamiento. Este tipo de daño incrementa el riesgo de contaminación y acelera el proceso natural de deterioro del producto.",
   },
 
   {
@@ -120,6 +148,9 @@ const REGISTRO = [
     date: "11/05/2026",
     image:
       "https://images.unsplash.com/photo-1563114773-84221bd62daa?q=80&w=1200&auto=format&fit=crop",
+
+    description:
+      "La sandía presenta golpes externos y deformaciones leves ocasionadas por impactos durante el traslado y manipulación. El daño compromete la estructura interna de la fruta y disminuye considerablemente su calidad comercial.",
   },
 
   {
@@ -131,6 +162,9 @@ const REGISTRO = [
     date: "10/05/2026",
     image:
       "https://images.unsplash.com/photo-1517282009859-f000ec3b26fe?q=80&w=1200&auto=format&fit=crop",
+
+    description:
+      "La papaya presenta manchas oscuras en la cáscara causadas por humedad y cambios bruscos de temperatura durante el almacenamiento. Estas alteraciones afectan la apariencia externa y evidencian una pérdida progresiva de calidad.",
   },
 
   {
@@ -142,6 +176,9 @@ const REGISTRO = [
     date: "09/05/2026",
     image:
       "https://images.unsplash.com/photo-1603833665858-e61d17a86224?q=80&w=1200&auto=format&fit=crop",
+
+    description:
+      "Los plátanos presentan rajaduras y separación parcial de la cáscara debido a sobrepresión en cajas de almacenamiento y transporte. Este daño acelera el proceso de maduración, reduce la vida útil y afecta la calidad visual del producto.",
   },
 ];
 
@@ -181,13 +218,9 @@ export function DamageListScreen({ navigation }) {
         />
 
         {filteredRegisters.map((item) => (
-          <TouchableOpacity
+          <View
             key={item.id}
             style={styles.card}
-            activeOpacity={0.9}
-            onPress={() =>
-              navigation.navigate("DamageDetail")
-            }
           >
             <Image
               source={{ uri: item.image }}
@@ -215,13 +248,23 @@ export function DamageListScreen({ navigation }) {
                 Fecha: {item.date}
               </Text>
 
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() =>
+                  navigation.navigate(
+                    "DamageDetail",
+                    {
+                      item: item,
+                    }
+                  )
+                }
+              >
                 <Text style={styles.buttonText}>
                   Ver detalle
                 </Text>
               </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+          </View>
         ))}
 
         {filteredRegisters.length === 0 && (
