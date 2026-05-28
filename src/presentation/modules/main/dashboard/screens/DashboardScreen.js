@@ -20,8 +20,8 @@ export function DashboardScreen() {
   };
 
   const generarReportes = () => {
-    Alert.alert('Generar reportes', 'Aquí se generará el reporte para el cliente');
-  };
+  navigation.navigate('Reporte');
+};
 
   const perfilUsuario = () => {
     navigation.navigate('Profile');
