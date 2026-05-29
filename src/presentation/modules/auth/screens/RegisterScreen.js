@@ -8,12 +8,13 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuthStore } from '../store/authStore';
+import { passwordSchema } from '../../../../core/utils';
 
 const schema = z.object({
   name:             z.string().min(2, 'Mínimo 2 caracteres'),
   lastName:         z.string().min(2, 'Mínimo 2 caracteres'),
   email:            z.string().email('Correo inválido'),
-  password:         z.string().min(8, 'Mínimo 8 caracteres'),
+  password:         passwordSchema,
   confirmPassword:  z.string(),
   securityQuestion: z.string().min(5, 'Escribe una pregunta de seguridad'),
   securityAnswer:   z.string().min(2, 'Escribe una respuesta'),

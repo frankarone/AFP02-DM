@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView, Platform, ScrollView,
 } from 'react-native';
 import { useAuthStore } from '../store/authStore';
+import { isValidPassword, PASSWORD_RULES_MESSAGE } from '../../../../core/utils';
 
 export function ForgotPasswordScreen({ navigation }) {
   const { requestSecurityQuestion, resetPassword, isLoading, clearError } = useAuthStore();
@@ -40,8 +41,8 @@ export function ForgotPasswordScreen({ navigation }) {
       Alert.alert('Error', 'Ingresa la respuesta de seguridad');
       return;
     }
-    if (newPassword.length < 8) {
-      Alert.alert('Error', 'La nueva contraseña debe tener mínimo 8 caracteres');
+    if (!isValidPassword(newPassword)) {
+      Alert.alert('Error', `La nueva contraseña no es válida. ${PASSWORD_RULES_MESSAGE}`);
       return;
     }
     if (newPassword !== confirmPassword) {

@@ -8,10 +8,11 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuthStore } from '../store/authStore';
+import { passwordSchema } from '../../../../core/utils';
 
 const schema = z.object({
   currentPassword: z.string().min(1, 'Ingresa tu contraseña actual'),
-  newPassword:     z.string().min(8, 'Mínimo 8 caracteres'),
+  newPassword:     passwordSchema,
   confirmPassword: z.string(),
 }).refine(d => d.newPassword === d.confirmPassword, {
   message: 'Las contraseñas no coinciden',
