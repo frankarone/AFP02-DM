@@ -111,5 +111,11 @@ export const useAuthStore = create((set, get) => ({
     await get().loadUsers();
   },
 
+  // Cambia el rol de una cuenta (dar o quitar admin) y recarga la lista.
+  setUserRole: async (email, role) => {
+    await container.authRepository.setUserRole(email, role);
+    await get().loadUsers();
+  },
+
   clearError: () => set({ error: null }),
 }));

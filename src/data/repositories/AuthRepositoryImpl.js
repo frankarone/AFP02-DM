@@ -202,4 +202,10 @@ export class AuthRepositoryImpl {
     const updated = await this.users.update(email, { active });
     return this.toPublicUser(updated);
   }
+
+  // Cambia el rol de una cuenta (dar o quitar permisos de admin).
+  async setUserRole(email, role) {
+    const updated = await this.users.update(email, { role });
+    return this.toPublicUser(updated);
+  }
 }

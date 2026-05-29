@@ -10,6 +10,7 @@ export function UserAdminScreen() {
   const users = useAuthStore((s) => s.users);
   const loadUsers = useAuthStore((s) => s.loadUsers);
   const setUserActive = useAuthStore((s) => s.setUserActive);
+  const setUserRole = useAuthStore((s) => s.setUserRole);
 
   // Carga la lista al entrar.
   useEffect(() => {
@@ -32,17 +33,33 @@ export function UserAdminScreen() {
     );
   };
 
+  const confirmarRol = (item) => {
+    const dandoAdmin = item.role !== 'admin'; // si no es admin, lo vamos a hacer admin
+    const nuevoRol = dandoAdmin ? 'admin' : 'user';
+    Alert.alert(
+      dandoAdmin ? 'Dar permisos de admin' : 'Quitar permisos de admin',
+      `¿Seguro que deseas ${dandoAdmin ? 'convertir en administrador' : 'quitar el rol de administrador'} a ${item.email}?`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: dandoAdmin ? 'Hacer admin' : 'Quitar admin',
+          style: dandoAdmin ? 'default' : 'destructive',
+          onPress: () => setUserRole(item.email, nuevoRol),
+        },
+      ],
+    );
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.titulo}>Administrar usuarios</Text>
       <Text style={styles.subtitulo}>
-        Solo el administrador puede dar de baja o reactivar cuentas.
+        Solo el administrador puede cambiar roles, dar de baja o reactivar cuentas.
       </Text>
 
       {users.map((item) => {
         const esAdmin = item.role === 'admin';
-        const esYoMismo = item.email === currentUser?.email;
-        const bloqueado = esAdmin || esYoMismo; // no se puede dar de baja a admins ni a uno mismo
+        const esYoMismo = item.email === currentUser?.email; // no se puede editar a uno mismo
 
         return (
           <View key={item.id} style={styles.card}>
@@ -62,25 +79,44 @@ export function UserAdminScreen() {
               </View>
             </View>
 
-            {bloqueado ? (
+            {esYoMismo ? (
               <View style={styles.bloqueado}>
                 <Ionicons name="shield-checkmark-outline" size={22} color="#90A4AE" />
               </View>
             ) : (
-              <TouchableOpacity
-                style={[styles.boton, item.active ? styles.botonBaja : styles.botonAlta]}
-                onPress={() => confirmarCambio(item)}
-                activeOpacity={0.8}
-              >
-                <Ionicons
-                  name={item.active ? 'person-remove-outline' : 'person-add-outline'}
-                  size={18}
-                  color="#fff"
-                />
-                <Text style={styles.botonTexto}>
-                  {item.active ? 'Dar de baja' : 'Reactivar'}
-                </Text>
-              </TouchableOpacity>
+              <View style={styles.acciones}>
+                <TouchableOpacity
+                  style={[styles.boton, esAdmin ? styles.botonQuitarAdmin : styles.botonAdmin]}
+                  onPress={() => confirmarRol(item)}
+                  activeOpacity={0.8}
+                >
+                  <Ionicons
+                    name={esAdmin ? 'shield-outline' : 'shield-checkmark-outline'}
+                    size={18}
+                    color="#fff"
+                  />
+                  <Text style={styles.botonTexto}>
+                    {esAdmin ? 'Quitar admin' : 'Hacer admin'}
+                  </Text>
+                </TouchableOpacity>
+
+                {!esAdmin && (
+                  <TouchableOpacity
+                    style={[styles.boton, item.active ? styles.botonBaja : styles.botonAlta]}
+                    onPress={() => confirmarCambio(item)}
+                    activeOpacity={0.8}
+                  >
+                    <Ionicons
+                      name={item.active ? 'person-remove-outline' : 'person-add-outline'}
+                      size={18}
+                      color="#fff"
+                    />
+                    <Text style={styles.botonTexto}>
+                      {item.active ? 'Dar de baja' : 'Reactivar'}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             )}
           </View>
         );
@@ -154,15 +190,22 @@ const styles = StyleSheet.create({
   badgeUser: { backgroundColor: '#2980b9' },
   badgeActivo: { backgroundColor: '#27ae60' },
   badgeInactivo: { backgroundColor: '#c0392b' },
+  acciones: {
+    alignItems: 'stretch',
+  },
   boton: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 9,
     paddingHorizontal: 12,
     borderRadius: 8,
+    marginBottom: 6,
   },
   botonBaja: { backgroundColor: '#e74c3c' },
   botonAlta: { backgroundColor: '#27ae60' },
+  botonAdmin: { backgroundColor: '#8e44ad' },
+  botonQuitarAdmin: { backgroundColor: '#d35400' },
   botonTexto: {
     color: '#fff',
     fontWeight: 'bold',
