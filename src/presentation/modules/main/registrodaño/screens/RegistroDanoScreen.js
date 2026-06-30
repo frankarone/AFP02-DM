@@ -12,6 +12,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "../../../auth/store/authStore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function RegistroDanoScreen() {
   const user = useAuthStore((s) => s.user);
@@ -52,29 +53,47 @@ export function RegistroDanoScreen() {
     }
   };
 
-  const guardarRegistro = () => {
+  const guardarRegistro = async () => {
     if (!fruta || !tipoDano || !cantidad) {
       Alert.alert("Error", "Completa los campos obligatorios");
       return;
     }
 
-    const nuevoRegistro = {
-      fruta,
-      tipoDano,
-      cantidad,
-      descripcion,
-      imagen,
-      fecha: new Date(),
-    };
+    try {
+      const nuevoRegistro = {
+        id: Date.now().toString(),
+        fruta,
+        tipoDano,
+        cantidad,
+        descripcion,
+        imagen,
+        fecha: new Date().toISOString(),
+      };
 
-    console.log(nuevoRegistro);
-    Alert.alert("Éxito", "Daño registrado correctamente");
+      // Leer registros existentes
+      const registrosGuardados = await AsyncStorage.getItem("danos");
 
-    setFruta("");
-    setTipoDano("");
-    setCantidad("");
-    setDescripcion("");
-    setImagen(null);
+      const listaDanos = registrosGuardados
+        ? JSON.parse(registrosGuardados)
+        : [];
+
+      // Agregar el nuevo registro
+      listaDanos.push(nuevoRegistro);
+
+      // Guardar nuevamente
+      await AsyncStorage.setItem("danos", JSON.stringify(listaDanos));
+
+      Alert.alert("Éxito", "Daño registrado correctamente");
+
+      setFruta("");
+      setTipoDano("");
+      setCantidad("");
+      setDescripcion("");
+      setImagen(null);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "No se pudo guardar el registro");
+    }
   };
 
   // Solo los administradores pueden registrar daños (modo consulta para usuarios).
@@ -84,21 +103,53 @@ export function RegistroDanoScreen() {
         <Ionicons name="lock-closed-outline" size={60} color="#e74c3c" />
         <Text style={styles.bloqueadoTitulo}>Acceso restringido</Text>
         <Text style={styles.bloqueadoTexto}>
-          Solo los administradores pueden registrar daños. Tu cuenta está en modo consulta.
+          Solo los administradores pueden registrar daños. Tu cuenta está en
+          modo consulta.
         </Text>
       </View>
     );
   }
 
   return (
-    <ScrollView contentContainerStyle={{ ...styles.container, justifyContent: "center" }}>
+    <ScrollView
+      contentContainerStyle={{ ...styles.container, justifyContent: "center" }}
+    >
       <Text style={styles.titulo}>Registrar Daño</Text>
 
       <View style={styles.card}>
-        <Input label="Tipo de fruta *" value={fruta} onChange={setFruta} placeholder="Ej: Mango" />
-        <Input label="Tipo de daño *" value={tipoDano} onChange={setTipoDano} placeholder="Ej: Golpe" />
-        <Input label="Cantidad *" value={cantidad} onChange={setCantidad} placeholder="Ej: 10" keyboard="numeric" />
-        <Input label="Descripción" value={descripcion} onChange={setDescripcion} multiline />
+        <Text style={styles.label}>Tipo de fruta *</Text>
+        <TextInput
+          style={styles.input}
+          value={fruta}
+          onChangeText={setFruta}
+          placeholder="Ej: Mango"
+        />
+
+        <Text style={styles.label}>Tipo de daño *</Text>
+        <TextInput
+          style={styles.input}
+          value={tipoDano}
+          onChangeText={setTipoDano}
+          placeholder="Ej: Golpe"
+        />
+
+        <Text style={styles.label}>Cantidad *</Text>
+        <TextInput
+          style={styles.input}
+          value={cantidad}
+          onChangeText={setCantidad}
+          placeholder="Ej: 10"
+          keyboardType="numeric"
+        />
+
+        <Text style={styles.label}>Descripción</Text>
+        <TextInput
+          style={[styles.input, styles.textArea]}
+          value={descripcion}
+          onChangeText={setDescripcion}
+          placeholder="Describe el daño"
+          multiline
+        />
 
         {/* Botones de imagen */}
         <View style={styles.row}>
@@ -107,7 +158,10 @@ export function RegistroDanoScreen() {
             <Text style={styles.textoBtn}>Cámara</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.btnSecundario} onPress={elegirDesdeGaleria}>
+          <TouchableOpacity
+            style={styles.btnSecundario}
+            onPress={elegirDesdeGaleria}
+          >
             <Ionicons name="image-outline" size={20} color="#fff" />
             <Text style={styles.textoBtn}>Galería</Text>
           </TouchableOpacity>
@@ -125,30 +179,6 @@ export function RegistroDanoScreen() {
         </TouchableOpacity>
       </View>
     </ScrollView>
-  );
-}
-
-/* Componente reutilizable */
-function Input({
-  label,
-  value,
-  onChange,
-  placeholder = "",
-  multiline = false,
-  keyboard = "default",
-}) {
-  return (
-    <>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput
-        style={[styles.input, multiline && styles.textArea]}
-        value={value}
-        onChangeText={onChange}
-        placeholder={placeholder}
-        multiline={multiline}
-        keyboardType={keyboard}
-      />
-    </>
   );
 }
 

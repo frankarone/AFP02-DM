@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,154 +9,42 @@ import {
   SafeAreaView,
   TextInput,
 } from "react-native";
-
-// DATOS TEMPORALES: Luego estos datos se veran desde la BD
-const REGISTRO = [
-  {
-    id: "1",
-    product: "Palta",
-    lote: "LOT-001",
-    cantidad: "12",
-    damage: "Golpe",
-    date: "20/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: "2",
-    product: "Mandarina",
-    lote: "LOT-002",
-    cantidad: "8",
-    damage: "Mancha",
-    date: "19/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: "3",
-    product: "Naranja",
-    lote: "LOT-003",
-    cantidad: "15",
-    damage: "Rajadura",
-    date: "18/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1547514701-42782101795e?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: "4",
-    product: "Mango",
-    lote: "LOT-004",
-    cantidad: "6",
-    damage: "Golpe",
-    date: "17/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1553279768-865429fa0078?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: "5",
-    product: "Manzana",
-    lote: "LOT-005",
-    cantidad: "11",
-    damage: "Mancha",
-    date: "16/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: "6",
-    product: "Pera",
-    lote: "LOT-006",
-    cantidad: "9",
-    damage: "Rajadura",
-    date: "15/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1514756331096-242fdeb70d4a?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: "7",
-    product: "Fresa",
-    lote: "LOT-007",
-    cantidad: "20",
-    damage: "Golpe",
-    date: "14/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: "8",
-    product: "Piña",
-    lote: "LOT-008",
-    cantidad: "5",
-    damage: "Mancha",
-    date: "13/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1589820296156-2454bb8a6ad1?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: "9",
-    product: "Uva",
-    lote: "LOT-009",
-    cantidad: "14",
-    damage: "Rajadura",
-    date: "12/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1537640538966-79f369143f8f?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: "10",
-    product: "Sandía",
-    lote: "LOT-010",
-    cantidad: "3",
-    damage: "Golpe",
-    date: "11/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1563114773-84221bd62daa?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: "11",
-    product: "Papaya",
-    lote: "LOT-011",
-    cantidad: "7",
-    damage: "Mancha",
-    date: "10/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1517282009859-f000ec3b26fe?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: "12",
-    product: "Plátano",
-    lote: "LOT-012",
-    cantidad: "18",
-    damage: "Rajadura",
-    date: "09/05/2026",
-    image:
-      "https://images.unsplash.com/photo-1603833665858-e61d17a86224?q=80&w=1200&auto=format&fit=crop",
-  },
-];
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 export function DamageListScreen({ navigation }) {
   const [search, setSearch] = useState("");
+  const [registros, setRegistros] = useState([]);
 
-  const filteredRegisters = REGISTRO.filter((item) => {
+  const cargarRegistros = async () => {
+    try {
+      const data = await AsyncStorage.getItem("danos");
+
+      if (data) {
+        setRegistros(JSON.parse(data));
+      } else {
+        setRegistros([]);
+      }
+    } catch (error) {
+      console.log("Error cargando registros:", error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      cargarRegistros();
+    }, [])
+  );
+
+  const filteredRegisters = registros.filter((item) => {
     const text = search.toLowerCase();
 
     return (
-      item.product.toLowerCase().includes(text) ||
-      item.lote.toLowerCase().includes(text) ||
-      item.cantidad.toLowerCase().includes(text) ||
-      item.damage.toLowerCase().includes(text) ||
-      item.date.toLowerCase().includes(text)
+      item.fruta.toLowerCase().includes(text) ||
+      item.tipoDano.toLowerCase().includes(text) ||
+      item.cantidad.toString().toLowerCase().includes(text) ||
+      (item.descripcion || "").toLowerCase().includes(text) ||
+      new Date(item.fecha).toLocaleDateString().includes(text)
     );
   });
 
@@ -167,13 +55,11 @@ export function DamageListScreen({ navigation }) {
         contentContainerStyle={styles.scroll}
       >
         <View style={styles.header}>
-          <Text style={styles.title}>
-            Lista de Registros
-          </Text>
+          <Text style={styles.title}>Lista de Registros</Text>
         </View>
 
         <TextInput
-          placeholder="Buscar por producto, lote, fecha o tipo"
+          placeholder="Buscar por fruta, daño, cantidad o fecha"
           placeholderTextColor="#90A4AE"
           value={search}
           onChangeText={setSearch}
@@ -186,36 +72,48 @@ export function DamageListScreen({ navigation }) {
             style={styles.card}
             activeOpacity={0.9}
             onPress={() =>
-              navigation.navigate("DamageDetail")
+              navigation.navigate("DamageDetail", {
+                dano: item,
+              })
             }
           >
-            <Image
-              source={{ uri: item.image }}
-              style={styles.image}
-            />
+            {item.imagen ? (
+              <Image
+                source={{ uri: item.imagen }}
+                style={styles.image}
+              />
+            ) : (
+              <View style={[styles.image, styles.imagePlaceholder]}>
+                <Text style={styles.placeholderText}>Sin imagen</Text>
+              </View>
+            )}
 
             <View style={styles.infoContainer}>
               <Text style={styles.product}>
-                Tipo de fruta: {item.product}
+                Tipo de fruta: {item.fruta}
               </Text>
 
               <Text style={styles.info}>
-                Lote: {item.lote}
+                Tipo de daño: {item.tipoDano}
               </Text>
 
               <Text style={styles.info}>
                 Cantidad dañada: {item.cantidad}
-              </Text>
+              </Text>              
 
               <Text style={styles.info}>
-                Tipo de daño: {item.damage}
+                Fecha:{" "}
+                {new Date(item.fecha).toLocaleDateString()}
               </Text>
 
-              <Text style={styles.info}>
-                Fecha: {item.date}
-              </Text>
-
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() =>
+                  navigation.navigate("DamageDetail", {
+                    dano: item,
+                  })
+                }
+              >
                 <Text style={styles.buttonText}>
                   Ver detalle
                 </Text>
@@ -227,7 +125,7 @@ export function DamageListScreen({ navigation }) {
         {filteredRegisters.length === 0 && (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>
-              No se encontraron registros
+              No hay registros de daños guardados.
             </Text>
           </View>
         )}
@@ -300,6 +198,17 @@ const styles = StyleSheet.create({
     height: 95,
     borderRadius: 16,
     backgroundColor: "#E0E0E0",
+  },
+
+  imagePlaceholder: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  placeholderText: {
+    fontSize: 10,
+    color: "#777",
+    textAlign: "center",
   },
 
   infoContainer: {
