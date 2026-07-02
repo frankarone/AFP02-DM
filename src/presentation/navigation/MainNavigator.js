@@ -1,13 +1,14 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View , Text , Image , StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { DashboardScreen } from '../modules/main/dashboard/screens/DashboardScreen';
 import { ProfileScreen } from '../modules/profile/screens/ProfileScreen';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../modules/auth/store/authStore';
 import { RegistroDanoScreen } from '../modules/main/registrodaño/screens/RegistroDanoScreen';
 import { DamageListScreen } from '../modules/main/catalog/screens/DamageListScreen';
-import { UserAdminScreen } from '../modules/main/admin/screens/UserAdminScreen';
+import { DamageDetailScreen } from '../modules/main/catalog/screens/DamageDetailScreen';
+import { UserAdminScreen } from '../modules/main/admin/screens/UserAdminScreen'; // ¡Esta es la línea que se había borrado!
 import { ChangePasswordScreen } from '../modules/profile/screens/ChangePasswordScreen';
 import ReporteScreen from '../modules/main/reporte/screens/ReporteScreen';
 
@@ -17,16 +18,14 @@ export function MainNavigator() {
   const Stack = createNativeStackNavigator();
   const user = useAuthStore((s) => s.user);
 
-  //froentend del navigator
+  //frontend del navigator
   return (
-    <Stack.Navigator screenOptions={{ headerShown: true,
-
+    <Stack.Navigator screenOptions={{ 
+        headerShown: true,
         headerStyle: {
           backgroundColor: '#f1eca2',
         },
-
         headerShadowVisible: true,
-
         headerTitle: () => (
           <View style={styles.headerTitulo}>
             <Image
@@ -35,10 +34,8 @@ export function MainNavigator() {
             />
             <Text style={styles.nombreSistema}>FPPMS</Text>
           </View>
-
         ),
-
-      headerRight: () => (
+        headerRight: () => (
         <View style={styles.usuarioCaja}>
           <Ionicons name="person" size={24} color="#f7bfbf" />
           <Text style={styles.usuarioTexto}>{user?.name}</Text>
@@ -46,11 +43,11 @@ export function MainNavigator() {
         ),
       }}
     >
-
       <Stack.Screen name="Dashboard" component={DashboardScreen}/>
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="RegistroDano" component={RegistroDanoScreen} />
       <Stack.Screen name="ListDano" component={DamageListScreen} />
+      <Stack.Screen name="DamageDetail" component={DamageDetailScreen} options={{ title: 'Detalle del Registro' }} />
       <Stack.Screen name="AdminUsers" component={UserAdminScreen} options={{ title: 'Administrar usuarios' }} />
       <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
       <Stack.Screen name="Reporte" component={ReporteScreen} options={{ title: 'Reportes de Calidad' }} />
@@ -64,19 +61,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-
   logo: {
     width: 85,
     height: 35,
     resizeMode: 'contain',
     marginRight: 10,
   },
-
   nombreSistema: {
     fontSize: 17,
     color: '#777',
   },
-
   usuarioCaja: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -85,7 +79,6 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 3,
   },
-
   usuarioTexto: {
     marginLeft: 4,
     fontSize: 13,

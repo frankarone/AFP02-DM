@@ -1,17 +1,13 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  ScrollView,
-  Image,
-} from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ScrollView, Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "../../../auth/store/authStore";
+
+// IMPORTANTE: Importamos tu AppStorage
+import { AppStorage } from '../../../../../infrastructure/storage/AppStorage';
+
+const STORAGE_KEY = '@reportes_calidad';
 
 export function RegistroDanoScreen() {
   const user = useAuthStore((s) => s.user);
@@ -25,16 +21,11 @@ export function RegistroDanoScreen() {
 
   const tomarFoto = async () => {
     const permiso = await ImagePicker.requestCameraPermissionsAsync();
-
     if (!permiso.granted) {
       Alert.alert("Permiso requerido", "Debes permitir acceso a la cámara");
       return;
     }
-
-    const resultado = await ImagePicker.launchCameraAsync({
-      quality: 0.7,
-    });
-
+    const resultado = await ImagePicker.launchCameraAsync({ quality: 0.7 });
     if (!resultado.canceled) {
       const uri = resultado.assets?.[0]?.uri;
       if (uri) setImagen(uri);
@@ -42,42 +33,67 @@ export function RegistroDanoScreen() {
   };
 
   const elegirDesdeGaleria = async () => {
-    const resultado = await ImagePicker.launchImageLibraryAsync({
-      quality: 0.7,
-    });
-
+    const resultado = await ImagePicker.launchImageLibraryAsync({ quality: 0.7 });
     if (!resultado.canceled) {
       const uri = resultado.assets?.[0]?.uri;
       if (uri) setImagen(uri);
     }
   };
 
-  const guardarRegistro = () => {
+  const guardarRegistro = async () => {
     if (!fruta || !tipoDano || !cantidad) {
       Alert.alert("Error", "Completa los campos obligatorios");
       return;
     }
 
-    const nuevoRegistro = {
-      fruta,
-      tipoDano,
-      cantidad,
-      descripcion,
-      imagen,
-      fecha: new Date(),
-    };
+    // 1. Obtenemos la fecha actual en formato texto
+    const fechaActual = new Date();
+    const dia = String(fechaActual.getDate()).padStart(2, '0');
+    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0'); 
+    const año = fechaActual.getFullYear();
+    const fechaFormateada = `${dia}/${mes}/${año}`;
 
-    console.log(nuevoRegistro);
-    Alert.alert("Éxito", "Daño registrado correctamente");
+    try {
+      // 2. Traemos todos los reportes que ya existen en la memoria local
+      let dataActual = await AppStorage.getJSON(STORAGE_KEY);
+      if (!dataActual) dataActual = [];
 
-    setFruta("");
-    setTipoDano("");
-    setCantidad("");
-    setDescripcion("");
-    setImagen(null);
+      // 3. Generamos un ID y un Lote falso para simular la estructura
+      const nuevoId = dataActual.length > 0 ? Math.max(...dataActual.map(d => d.id)) + 1 : 1;
+      const nuevoLote = `LOT-00${nuevoId}`;
+
+      // 4. Construimos el nuevo registro con la estructura exacta que espera ReporteScreen
+      const nuevoRegistro = {
+        id: nuevoId,
+        product: fruta,
+        lote: nuevoLote,
+        cantidad: parseInt(cantidad, 10),
+        damage: tipoDano,
+        date: fechaFormateada,
+        // Guardamos estos extra por si acaso, aunque Reportes no los usa aún
+        descripcion: descripcion,
+        imagen: imagen 
+      };
+
+      // 5. Agregamos el nuevo registro a la lista y la sobreescribimos en el celular
+      dataActual.push(nuevoRegistro);
+      await AppStorage.setJSON(STORAGE_KEY, dataActual);
+
+      Alert.alert("Éxito", "El daño se ha registrado y guardado en la memoria local.");
+
+      // Limpiamos el formulario
+      setFruta("");
+      setTipoDano("");
+      setCantidad("");
+      setDescripcion("");
+      setImagen(null);
+      
+    } catch (error) {
+      Alert.alert("Error interno", "Hubo un problema guardando el archivo en el teléfono.");
+      console.error(error);
+    }
   };
 
-  // Solo los administradores pueden registrar daños (modo consulta para usuarios).
   if (!isAdmin) {
     return (
       <View style={styles.bloqueado}>
@@ -93,32 +109,25 @@ export function RegistroDanoScreen() {
   return (
     <ScrollView contentContainerStyle={{ ...styles.container, justifyContent: "center" }}>
       <Text style={styles.titulo}>Registrar Daño</Text>
-
       <View style={styles.card}>
         <Input label="Tipo de fruta *" value={fruta} onChange={setFruta} placeholder="Ej: Mango" />
         <Input label="Tipo de daño *" value={tipoDano} onChange={setTipoDano} placeholder="Ej: Golpe" />
         <Input label="Cantidad *" value={cantidad} onChange={setCantidad} placeholder="Ej: 10" keyboard="numeric" />
         <Input label="Descripción" value={descripcion} onChange={setDescripcion} multiline />
 
-        {/* Botones de imagen */}
         <View style={styles.row}>
           <TouchableOpacity style={styles.btnSecundario} onPress={tomarFoto}>
             <Ionicons name="camera-outline" size={20} color="#fff" />
             <Text style={styles.textoBtn}>Cámara</Text>
           </TouchableOpacity>
-
           <TouchableOpacity style={styles.btnSecundario} onPress={elegirDesdeGaleria}>
             <Ionicons name="image-outline" size={20} color="#fff" />
             <Text style={styles.textoBtn}>Galería</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Preview */}
-        {imagen && (
-          <Image source={{ uri: imagen }} style={styles.imagenPreview} />
-        )}
+        {imagen && <Image source={{ uri: imagen }} style={styles.imagenPreview} />}
 
-        {/* Botón principal */}
         <TouchableOpacity style={styles.boton} onPress={guardarRegistro}>
           <Ionicons name="save-outline" size={20} color="#fff" />
           <Text style={styles.textoBoton}>Guardar Registro</Text>
@@ -128,15 +137,7 @@ export function RegistroDanoScreen() {
   );
 }
 
-/* Componente reutilizable */
-function Input({
-  label,
-  value,
-  onChange,
-  placeholder = "",
-  multiline = false,
-  keyboard = "default",
-}) {
+function Input({ label, value, onChange, placeholder = "", multiline = false, keyboard = "default" }) {
   return (
     <>
       <Text style={styles.label}>{label}</Text>
