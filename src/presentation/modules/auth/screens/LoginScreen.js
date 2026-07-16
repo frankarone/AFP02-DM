@@ -118,10 +118,6 @@ export function LoginScreen({ navigation }) {
           <Text style={styles.link}>¿Olvidaste tu contraseña?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={styles.link}>¿No tienes cuenta? <Text style={styles.linkBold}>Regístrate</Text></Text>
-        </TouchableOpacity>
-
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -207,9 +203,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 8,
     textAlign: 'center',
-  },
-  linkBold: {
-    color: '#6B93B0',
-    fontWeight: '700',
   },
 });

@@ -55,21 +55,37 @@ export class AuthRepositoryImpl {
     });
   }
 
+  // Solo un administrador autenticado puede crear usuarios (con rol asignado).
+  async assertAdmin() {
+    const current = await this.getCurrentUser();
+    if (!current || current.role !== ROLES.ADMIN) {
+      throw new AppError('FORBIDDEN', 'Solo un administrador puede realizar esta acción');
+    }
+    return current;
+  }
+
   async register(data) {
-    const exists = await this.users.findByEmail(data.email);
+    await this.assertAdmin();
+
+    const email = data.email.trim().toLowerCase();
+    const exists = await this.users.findByEmail(email);
     if (exists) {
-      throw new AppError('VALIDATION_ERROR', 'Ya existe una cuenta con ese correo');
+      throw new AppError(
+        'VALIDATION_ERROR',
+        'Ya existe un usuario con ese correo electrónico. No se puede repetir el mismo correo, aunque el rol sea distinto.',
+      );
     }
 
+    const role = data.role === ROLES.ADMIN ? ROLES.ADMIN : ROLES.USER;
     const password = await PasswordHasher.hash(data.password);
     const answer = await PasswordHasher.hash(data.securityAnswer.trim().toLowerCase());
 
     const record = {
       id: Date.now().toString(),
-      email: data.email.trim(),
+      email,
       name: data.name,
       lastName: data.lastName,
-      role: ROLES.USER, // todo registro nuevo es usuario normal
+      role,
       active: true,
       passwordSalt: password.salt,
       passwordHash: password.hash,
@@ -193,19 +209,26 @@ export class AuthRepositoryImpl {
   // ─── Administración (solo admin) ───────────────────────────
   // Lista de usuarios sin datos sensibles.
   async getAllUsers() {
+    await this.assertAdmin();
     const all = await this.users.getAll();
     return all.map((u) => this.toPublicUser(u));
   }
 
   // Activa o desactiva una cuenta (dar de baja = active:false).
   async setUserActive(email, active) {
+    await this.assertAdmin();
     const updated = await this.users.update(email, { active });
     return this.toPublicUser(updated);
   }
 
   // Cambia el rol de una cuenta (dar o quitar permisos de admin).
   async setUserRole(email, role) {
-    const updated = await this.users.update(email, { role });
+    await this.assertAdmin();
+    const nextRole = role === ROLES.ADMIN ? ROLES.ADMIN : ROLES.USER;
+    const updated = await this.users.update(email, { role: nextRole });
+    if (!updated) {
+      throw new AppError('NOT_FOUND', 'No se encontró el usuario para cambiar el rol');
+    }
     return this.toPublicUser(updated);
   }
 }

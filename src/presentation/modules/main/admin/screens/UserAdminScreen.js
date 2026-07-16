@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import {
-  View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert,
+  View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../../auth/store/authStore';
 
-export function UserAdminScreen() {
+export function UserAdminScreen({ navigation }) {
   const currentUser = useAuthStore((s) => s.user);
   const users = useAuthStore((s) => s.users);
   const loadUsers = useAuthStore((s) => s.loadUsers);
@@ -17,49 +17,85 @@ export function UserAdminScreen() {
     loadUsers();
   }, []);
 
-  const confirmarCambio = (item) => {
-    const dando = item.active; // si está activo, lo vamos a dar de baja
-    Alert.alert(
-      dando ? 'Dar de baja' : 'Reactivar usuario',
-      `¿Seguro que deseas ${dando ? 'dar de baja' : 'reactivar'} a ${item.email}?`,
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: dando ? 'Dar de baja' : 'Reactivar',
-          style: dando ? 'destructive' : 'default',
-          onPress: () => setUserActive(item.email, !item.active),
-        },
-      ],
-    );
+  const confirmar = (titulo, mensaje, textoConfirmar) => {
+    if (Platform.OS === 'web') {
+      return Promise.resolve(window.confirm(`${titulo}\n\n${mensaje}`));
+    }
+    return new Promise((resolve) => {
+      Alert.alert(titulo, mensaje, [
+        { text: 'Cancelar', style: 'cancel', onPress: () => resolve(false) },
+        { text: textoConfirmar, onPress: () => resolve(true) },
+      ]);
+    });
   };
 
-  const confirmarRol = (item) => {
-    const dandoAdmin = item.role !== 'admin'; // si no es admin, lo vamos a hacer admin
-    const nuevoRol = dandoAdmin ? 'admin' : 'user';
-    Alert.alert(
-      dandoAdmin ? 'Dar permisos de admin' : 'Quitar permisos de admin',
-      `¿Seguro que deseas ${dandoAdmin ? 'convertir en administrador' : 'quitar el rol de administrador'} a ${item.email}?`,
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: dandoAdmin ? 'Hacer admin' : 'Quitar admin',
-          style: dandoAdmin ? 'default' : 'destructive',
-          onPress: () => setUserRole(item.email, nuevoRol),
-        },
-      ],
+  const confirmarCambio = async (item) => {
+    const dando = item.active;
+    const ok = await confirmar(
+      dando ? 'Dar de baja' : 'Reactivar usuario',
+      `¿Seguro que deseas ${dando ? 'dar de baja' : 'reactivar'} a ${item.email}?`,
+      dando ? 'Dar de baja' : 'Reactivar',
     );
+    if (!ok) return;
+
+    try {
+      await setUserActive(item.email, !item.active);
+      Alert.alert(
+        'Listo',
+        dando
+          ? `Se dio de baja a ${item.email}.`
+          : `Se reactivó la cuenta de ${item.email}.`,
+      );
+    } catch (e) {
+      Alert.alert('Error', e?.message ?? 'No se pudo actualizar el estado del usuario.');
+    }
+  };
+
+  const confirmarRol = async (item) => {
+    const esAdmin = item.role === 'admin';
+    const nuevoRol = esAdmin ? 'user' : 'admin';
+    const ok = await confirmar(
+      esAdmin ? 'Quitar permisos de admin' : 'Dar permisos de admin',
+      esAdmin
+        ? `¿Seguro que deseas quitar el rol de administrador a ${item.email}? Pasará a ser usuario normal.`
+        : `¿Seguro que deseas convertir a ${item.email} en administrador?`,
+      esAdmin ? 'Quitar admin' : 'Hacer admin',
+    );
+    if (!ok) return;
+
+    try {
+      await setUserRole(item.email, nuevoRol);
+      Alert.alert(
+        'Rol actualizado',
+        esAdmin
+          ? `${item.email} ya no es administrador.`
+          : `${item.email} ahora es administrador.`,
+      );
+    } catch (e) {
+      Alert.alert('Error', e?.message ?? 'No se pudo cambiar el rol del usuario.');
+    }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.titulo}>Administrar usuarios</Text>
       <Text style={styles.subtitulo}>
-        Solo el administrador puede cambiar roles, dar de baja o reactivar cuentas.
+        Solo el administrador puede crear usuarios, cambiar roles, dar de baja o reactivar cuentas.
       </Text>
+
+      <TouchableOpacity
+        style={styles.botonCrear}
+        onPress={() => navigation.navigate('CreateUser')}
+        activeOpacity={0.8}
+      >
+        <Ionicons name="person-add-outline" size={20} color="#fff" />
+        <Text style={styles.botonCrearTexto}>Crear usuario</Text>
+      </TouchableOpacity>
 
       {users.map((item) => {
         const esAdmin = item.role === 'admin';
-        const esYoMismo = item.email === currentUser?.email; // no se puede editar a uno mismo
+        const esYoMismo =
+          item.email?.trim().toLowerCase() === currentUser?.email?.trim().toLowerCase();
 
         return (
           <View key={item.id} style={styles.card}>
@@ -100,22 +136,20 @@ export function UserAdminScreen() {
                   </Text>
                 </TouchableOpacity>
 
-                {!esAdmin && (
-                  <TouchableOpacity
-                    style={[styles.boton, item.active ? styles.botonBaja : styles.botonAlta]}
-                    onPress={() => confirmarCambio(item)}
-                    activeOpacity={0.8}
-                  >
-                    <Ionicons
-                      name={item.active ? 'person-remove-outline' : 'person-add-outline'}
-                      size={18}
-                      color="#fff"
-                    />
-                    <Text style={styles.botonTexto}>
-                      {item.active ? 'Dar de baja' : 'Reactivar'}
-                    </Text>
-                  </TouchableOpacity>
-                )}
+                <TouchableOpacity
+                  style={[styles.boton, item.active ? styles.botonBaja : styles.botonAlta]}
+                  onPress={() => confirmarCambio(item)}
+                  activeOpacity={0.8}
+                >
+                  <Ionicons
+                    name={item.active ? 'person-remove-outline' : 'person-add-outline'}
+                    size={18}
+                    color="#fff"
+                  />
+                  <Text style={styles.botonTexto}>
+                    {item.active ? 'Dar de baja' : 'Reactivar'}
+                  </Text>
+                </TouchableOpacity>
               </View>
             )}
           </View>
@@ -146,7 +180,23 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#666',
     textAlign: 'center',
+    marginBottom: 16,
+  },
+  botonCrear: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#16a085',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
     marginBottom: 20,
+  },
+  botonCrearTexto: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 15,
+    marginLeft: 8,
   },
   card: {
     backgroundColor: '#fff',

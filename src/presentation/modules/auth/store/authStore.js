@@ -26,7 +26,8 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  // Registra un usuario normal. No inicia sesión automáticamente.
+  // Registra un usuario. Solo un administrador autenticado puede hacerlo.
+  // No inicia sesión automáticamente con el usuario creado.
   register: async (data) => {
     set({ isLoading: true, error: null });
     try {
@@ -113,8 +114,12 @@ export const useAuthStore = create((set, get) => ({
 
   // Cambia el rol de una cuenta (dar o quitar admin) y recarga la lista.
   setUserRole: async (email, role) => {
-    await container.authRepository.setUserRole(email, role);
+    const updated = await container.authRepository.setUserRole(email, role);
+    if (!updated) {
+      throw new Error('No se encontró el usuario para actualizar el rol.');
+    }
     await get().loadUsers();
+    return updated;
   },
 
   clearError: () => set({ error: null }),

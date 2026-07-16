@@ -7,6 +7,7 @@ import { UpdatePasswordScreen } from '../modules/auth/screens/UpdatePasswordScre
 
 const Stack = createNativeStackNavigator();
 
+// Register queda en el stack pero sin enlace desde Login (registro público oculto).
 export function AuthNavigator() {
   return (
     <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>

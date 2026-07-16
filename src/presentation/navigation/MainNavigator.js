@@ -8,7 +8,8 @@ import { useAuthStore } from '../modules/auth/store/authStore';
 import { RegistroDanoScreen } from '../modules/main/registrodaño/screens/RegistroDanoScreen';
 import { DamageListScreen } from '../modules/main/catalog/screens/DamageListScreen';
 import { DamageDetailScreen } from '../modules/main/catalog/screens/DamageDetailScreen';
-import { UserAdminScreen } from '../modules/main/admin/screens/UserAdminScreen'; // ¡Esta es la línea que se había borrado!
+import { UserAdminScreen } from '../modules/main/admin/screens/UserAdminScreen';
+import { CreateUserScreen } from '../modules/main/admin/screens/CreateUserScreen';
 import { ChangePasswordScreen } from '../modules/profile/screens/ChangePasswordScreen';
 import ReporteScreen from '../modules/main/reporte/screens/ReporteScreen';
 
@@ -49,6 +50,7 @@ export function MainNavigator() {
       <Stack.Screen name="ListDano" component={DamageListScreen} />
       <Stack.Screen name="DamageDetail" component={DamageDetailScreen} options={{ title: 'Detalle del Registro' }} />
       <Stack.Screen name="AdminUsers" component={UserAdminScreen} options={{ title: 'Administrar usuarios' }} />
+      <Stack.Screen name="CreateUser" component={CreateUserScreen} options={{ title: 'Crear usuario' }} />
       <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
       <Stack.Screen name="Reporte" component={ReporteScreen} options={{ title: 'Reportes de Calidad' }} />
     </Stack.Navigator>

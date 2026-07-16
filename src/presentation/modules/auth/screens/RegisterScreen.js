@@ -66,6 +66,9 @@ export function RegisterScreen({ navigation }) {
 
         <Image source={require('../../../../../assets/Logo.png')} style={styles.logo} resizeMode="contain" />
         <Text style={styles.title}>Crear cuenta</Text>
+        <Text style={styles.hint}>
+          El registro público está deshabilitado. Solo un administrador puede crear usuarios.
+        </Text>
 
         {fields.map(f => (
           <View key={f.name} style={{ width: '100%' }}>
@@ -119,7 +122,8 @@ const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: '#fff' },
   container: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32, paddingVertical: 40, backgroundColor: '#fff' },
   logo: { width: 200, height: 90, marginBottom: 16 },
-  title: { fontSize: 20, fontWeight: '700', color: '#2E7D32', marginBottom: 24 },
+  title: { fontSize: 20, fontWeight: '700', color: '#2E7D32', marginBottom: 8 },
+  hint: { fontSize: 13, color: '#666', textAlign: 'center', marginBottom: 24, paddingHorizontal: 8 },
   inputWrapper: { flexDirection: 'row', alignItems: 'center', width: '100%', borderWidth: 1, borderColor: '#CFCFCF', borderLeftWidth: 4, borderLeftColor: '#B22222', borderRadius: 4, marginBottom: 12, backgroundColor: '#fff', overflow: 'hidden' },
   inputError: { borderColor: '#B22222' },
   iconBox: { width: 48, alignItems: 'center', justifyContent: 'center', borderRightWidth: 1, borderRightColor: '#E0E0E0', paddingVertical: 14 },
