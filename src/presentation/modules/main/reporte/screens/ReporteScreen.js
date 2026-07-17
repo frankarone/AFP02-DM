@@ -187,10 +187,6 @@ export default function ReporteScreen() {
     }
   };
 
-  const handleSendEmail = () => {
-    Alert.alert("Aviso", "La integración con servidor de correo requiere configuración backend. De momento, genere el PDF y compártalo por su aplicación de correo (Gmail/Outlook).");
-  };
-
   if (isLoading) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
@@ -265,9 +261,6 @@ export default function ReporteScreen() {
       <View style={styles.actionContainer}>
         <TouchableOpacity style={[styles.actionButton, styles.pdfButton]} onPress={handleExportPDF} activeOpacity={0.8}>
           <Text style={styles.actionButtonText}>📄 Generar Reporte PDF</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.actionButton, styles.emailButton]} onPress={handleSendEmail} activeOpacity={0.8}>
-          <Text style={styles.actionButtonText}>✉️ Enviar por Correo al Cliente</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -429,9 +422,6 @@ const styles = StyleSheet.create({
   },
   pdfButton: {
     backgroundColor: '#2e86de',
-  },
-  emailButton: {
-    backgroundColor: '#27ae60',
   },
   actionButtonText: {
     fontSize: 15,
